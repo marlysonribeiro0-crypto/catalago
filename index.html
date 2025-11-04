@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo Compartilhado - Loja Agropecuária</title>
+    <!-- Carrega o Tailwind CSS para um design moderno e responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bibliotecas para Exportação em PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Configura o Tailwind para usar a fonte Inter e cores primárias -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#4f46e5',
+                        'primary-dark': '#4338ca',
+                        'secondary': '#facc15',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilo para a animação de carregamento (Spinner) */
+        .spinner {
+            border-top-color: #4f46e5;
+            -webkit-animation: spin 1s infinite linear;
+            animation: spin 1s infinite linear;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans min-h-screen">
+    <div id="app" class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center py-6 bg-white shadow-md rounded-xl mb-6">
+            <h1 class="text-3xl font-extrabold text-primary">
+                🛒 Catálogo Digital Compartilhado
+            </h1>
+            <p id="user-info" class="text-sm text-gray-500 mt-1 font-medium text-green-600">
+                ✅ Sincronização em Tempo Real (via Firebase)
+            </p>
+            <p id="status-message" class="text-sm text-red-500 mt-1 font-medium italic">
+                Aguardando conexão com o banco de dados...
+            </p>
+        </header>
+
+        <!-- Seção para Adicionar/Editar Produto -->
+        <section class="bg-white p-6 rounded-xl shadow-lg mb-8" id="add-edit-section">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800" id="form-title">Adicionar Novo Produto</h2>
+            <form id="add-product-form" class="space-y-4">
+                <!-- Alterado para 4 colunas em telas maiores -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4"> 
+                    <!-- Nome do Produto -->
+                    <div>
+                        <label for="product-name" class="block text-sm font-medium text-gray-700">Nome do Produto</label>
+                        <input type="text" id="product-name" required placeholder="Ex: Ração para Cães (15kg)"
+                               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary p-3 border">
+                    </div>
+                    <!-- Código de Barras / SKU -->
+                    <div>
+                        <label for="product-barcode" class="block text-sm font-medium text-gray-700">Cód. Barras/SKU (Opcional)</label>
+                        <input type="text" id="product-barcode" placeholder="Ex: 7891234567890"
+                               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary p-3 border">
+                    </div>
+                    <!-- Preço -->
+                    <div>
+                        <label for="product-price" class="block text-sm font-medium text-gray-700">Preço (R$)</label>
+                        <input type="number" step="0.01" id="product-price" required placeholder="Ex: 45.99"
+                               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary p-3 border">
+                    </div>
+                    <!-- Quantidade (Novo Campo) -->
+                    <div>
+                        <label for="product-quantity" class="block text-sm font-medium text-gray-700">Quantidade (Estoque)</label>
+                        <input type="number" step="1" id="product-quantity" required placeholder="Ex: 15" value="0"
+                               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary p-3 border">
+                    </div>
+                </div>
+                <!-- Campo oculto para rastrear o ID durante a edição -->
+                <input type="hidden" id="editing-product-id" value="">
+                
+                <button type="submit" id="submit-btn" disabled
+                        class="w-full sm:w-auto px-6 py-3 bg-primary text-white font-bold rounded-lg shadow-md transition duration-150 transform disabled:opacity-50 disabled:cursor-not-allowed">
+                    <span id="submit-text">Aguarde...</span>
+                </button>
+            </form>
+            <div id="message-box" class="mt-4 p-3 rounded-lg text-sm hidden" role="alert"></div>
+        </section>
+
+        <!-- Seção de Busca e Listagem -->
+        <section class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Pesquisar e Visualizar Catálogo</h2>
+
+            <div class="flex space-x-2 mb-6"> 
+                <!-- Campo de Busca -->
+                <input type="text" id="search-input" placeholder="🔍 Digite o Nome OU o Código de Barras para pesquisar..."
+                       class="flex-grow rounded-lg border-gray-300 shadow-inner focus:border-secondary focus:ring-secondary p-4 border text-lg">
+                
+                <!-- Botão Exportar PDF -->
+                <button id="export-pdf-btn" class="px-4 py-3 bg-secondary text-gray-900 font-bold rounded-lg shadow-md hover:bg-yellow-400 transition duration-150 transform flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed" title="Exportar Catálogo para PDF">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L6.953 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="hidden sm:inline">PDF</span>
+                </button>
+            </div>
+
+
+            <!-- Lista de Produtos -->
+            <div id="products-list-container" class="space-y-4">
+                 <div id="loading-spinner" class="text-center py-10">
+                    <div class="spinner inline-block w-8 h-8 border-4 border-gray-200 rounded-full" role="status"></div>
+                    <p class="text-gray-500 mt-2">Carregando dados em tempo real...</p>
+                </div>
+                <div id="products-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Produtos serão injetados aqui -->
+                </div>
+                <p id="empty-state" class="text-center text-gray-500 py-10 hidden">
+                    Nenhum produto encontrado. Adicione um novo item acima!
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Importações do Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, addDoc, setDoc, deleteDoc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // =====================================================================================
+        // 🚨 CONFIGURAÇÃO DO FIREBASE INSERIDA:
+        // Esta é a sua chave, copiada do seu console do Firebase.
+        // =====================================================================================
+        const MY_FIREBASE_CONFIG = {
+          apiKey: "AIzaSyADKJJpVytkrAGMHospUfCiaz4-asmrvho",
+          authDomain: "catalogoagrovida.firebaseapp.com",
+          projectId: "catalogoagrovida",
+          storageBucket: "catalogoagrovida.firebasestorage.app",
+          messagingSenderId: "117706444585",
+          appId: "1:117706444585:web:923621285cbdd700fbf138"
+        };
+        // =====================================================================================
+
+        const firebaseConfig = MY_FIREBASE_CONFIG;
+        
+        let db;
+        let auth;
+        let userId = 'anon_user';
+        let isAuthReady = false;
+
+        // O caminho da coleção no Firestore será 'products' 
+        const PRODUCTS_COLLECTION_PATH = `products`; 
+
+        // --- Elementos UI ---
+        const productsList = document.getElementById('products-list');
+        const form = document.getElementById('add-product-form');
+        const nameInput = document.getElementById('product-name');
+        const barcodeInput = document.getElementById('product-barcode'); 
+        const priceInput = document.getElementById('product-price');
+        const quantityInput = document.getElementById('product-quantity'); // NOVO
+        const searchInput = document.getElementById('search-input');
+        const emptyState = document.getElementById('empty-state');
+        const messageBox = document.getElementById('message-box');
+        const formTitle = document.getElementById('form-title');
+        const submitBtn = document.getElementById('submit-btn');
+        const submitText = document.getElementById('submit-text');
+        const editingProductIdInput = document.getElementById('editing-product-id');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const statusMessage = document.getElementById('status-message');
+        const exportPdfBtn = document.getElementById('export-pdf-btn');
+        const productsListContainer = document.getElementById('products-list-container'); 
+
+        let allProducts = []; // Lista de produtos em memória
+
+
+        // --- Funções Auxiliares de UI ---
+
+        function showMessage(text, isError = false) {
+            messageBox.textContent = text;
+            messageBox.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
+            if (isError) {
+                messageBox.classList.add('bg-red-100', 'text-red-700');
+            } else {
+                messageBox.classList.add('bg-green-100', 'text-green-700');
+            }
+            setTimeout(() => messageBox.classList.add('hidden'), 5000);
+        }
+
+        function formatCurrency(value) {
+            const number = parseFloat(value);
+            if (isNaN(number)) return 'R$ 0,00';
+            return number.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function resetFormState() {
+            formTitle.textContent = 'Adicionar Novo Produto';
+            submitText.textContent = 'Salvar Produto';
+            editingProductIdInput.value = '';
+            form.reset();
+            nameInput.focus();
+        }
+
+
+        // --- Funções de Conexão Firebase ---
+
+        async function initializeFirebase() {
+            // Verifica a configuração fornecida pelo usuário
+            if (!firebaseConfig || !firebaseConfig.projectId) {
+                console.error("Firebase config is missing. Cannot initialize Firebase.");
+                statusMessage.textContent = 'ERRO: A chave de configuração está ausente ou inválida.';
+                return;
+            }
+            
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // Autenticação Anônima 
+                const userCredential = await signInAnonymously(auth);
+                userId = userCredential.user.uid;
+                
+                isAuthReady = true;
+                
+                statusMessage.textContent = `Status: Conectado em tempo real.`;
+                submitBtn.disabled = false;
+                exportPdfBtn.disabled = false; // Habilita o botão de exportação
+                submitText.textContent = 'Salvar Produto';
+                loadingSpinner.classList.add('hidden');
+
+                // Inicia o listener de dados em tempo real
+                setupRealtimeListener();
+
+            } catch (error) {
+                console.error("Firebase initialization or auth error:", error);
+                loadingSpinner.classList.add('hidden');
+                exportPdfBtn.disabled = true; // Desabilita o botão em caso de erro
+
+                if (error.code === 'auth/configuration-not-found') {
+                    statusMessage.textContent = `ERRO de Autenticação: Login Anônimo Desativado.`;
+                    showMessage('ERRO: Ative o Login Anônimo no console do Firebase!', true);
+                } else if (error.code === 'auth/admin-restricted-operation') {
+                    statusMessage.textContent = `ERRO de Autenticação: Domínio não autorizado.`;
+                    showMessage(`ERRO: Adicione '${window.location.host}' nas Configurações do seu projeto Firebase!`, true);
+                } else {
+                    statusMessage.textContent = `ERRO de Conexão: Verifique as regras do seu Firestore.`;
+                    showMessage(`Falha na conexão: ${error.message}`, true);
+                }
+            }
+        }
+        
+        /** Configura o listener em tempo real (onSnapshot) */
+        function setupRealtimeListener() {
+            if (!db || !isAuthReady) return;
+
+            const productsQuery = query(collection(db, PRODUCTS_COLLECTION_PATH));
+            
+            // onSnapshot observa mudanças e atualiza a lista em tempo real
+            onSnapshot(productsQuery, (snapshot) => {
+                const updatedProducts = [];
+                snapshot.forEach(doc => {
+                    updatedProducts.push({ id: doc.id, ...doc.data() });
+                });
+
+                allProducts = updatedProducts;
+                
+                // Ordena e renderiza
+                allProducts.sort((a, b) => a.name.localeCompare(b.name));
+                applySearchFilter(); 
+                
+            }, (error) => {
+                console.error("Erro no listener em tempo real:", error);
+                showMessage('Erro ao receber atualizações em tempo real.', true);
+            });
+        }
+
+        // --- Função de Exportação PDF ---
+
+        async function exportToPDF() {
+            if (allProducts.length === 0) {
+                return showMessage('O catálogo está vazio. Adicione produtos antes de exportar.', true);
+            }
+            
+            // 1. Prepara a UI para exportação (esconde botões de ação na lista)
+            document.querySelectorAll('.edit-btn, .delete-btn').forEach(btn => btn.style.display = 'none');
+            
+            // Cria um título temporário para o PDF
+            const pdfTitle = document.createElement('h3');
+            pdfTitle.textContent = "Catálogo de Produtos - Loja Agropecuária";
+            pdfTitle.className = "text-center text-xl font-bold mb-4 text-gray-800";
+            productsListContainer.prepend(pdfTitle);
+
+            // 2. Captura o conteúdo
+            try {
+                // Remove o campo de busca e o botão PDF antes de capturar
+                const searchArea = searchInput.closest('div.flex');
+                if (searchArea) searchArea.style.display = 'none';
+
+                const canvas = await html2canvas(productsListContainer, { 
+                    scale: 2, // Aumenta a resolução para melhor qualidade no PDF
+                    logging: false,
+                    useCORS: true 
+                });
+
+                // 3. Cria o PDF
+                const { jsPDF } = window.jspdf;
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 200; // Largura do PDF (A4 é ~210mm)
+                const pageHeight = 295; 
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                let position = 0;
+
+                pdf.addImage(imgData, 'PNG', 5, position + 5, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 5, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                // 4. Salva o arquivo
+                pdf.save(`catalogo-agrovida-${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.pdf`);
+
+            } catch (error) {
+                console.error("Erro ao gerar PDF:", error);
+                showMessage('Erro ao gerar PDF. Tente novamente ou verifique o console.', true);
+            } finally {
+                // 5. Restaura a UI
+                document.querySelectorAll('.edit-btn, .delete-btn').forEach(btn => btn.style.display = '');
+                pdfTitle.remove();
+                if (searchArea) searchArea.style.display = 'flex'; // Restaura a área de busca/PDF
+            }
+        }
+        
+        // --- Funções CRUD (Firebase Firestore) ---
+
+        /** Adiciona um novo produto ao Firestore */
+        async function addProduct(name, price, barcode, quantity) { // Adicionado quantity
+            if (!db || !isAuthReady) return showMessage("Erro: Conexão não estabelecida.", true);
+
+            const newProductData = {
+                name: name,
+                price: parseFloat(price).toFixed(2), 
+                barcode: barcode,
+                quantity: parseInt(quantity), // Salva como número inteiro
+                createdAt: new Date().toISOString(),
+                userId: userId 
+            };
+
+            try {
+                await addDoc(collection(db, PRODUCTS_COLLECTION_PATH), newProductData);
+                showMessage('Produto adicionado com sucesso!');
+                resetFormState();
+            } catch (e) {
+                console.error("Erro ao adicionar documento: ", e);
+                showMessage(`Erro ao salvar produto: ${e.message}`, true);
+            }
+        }
+        
+        /** Atualiza um produto existente no Firestore */
+        async function updateProduct(id, name, price, barcode, quantity) { // Adicionado quantity
+            if (!db || !isAuthReady) return showMessage("Erro: Conexão não estabelecida.", true);
+            
+            const productRef = doc(db, PRODUCTS_COLLECTION_PATH, id);
+            
+            try {
+                await setDoc(productRef, {
+                    name: name,
+                    price: parseFloat(price).toFixed(2),
+                    barcode: barcode,
+                    quantity: parseInt(quantity), // Salva como número inteiro
+                    updatedAt: new Date().toISOString(),
+                }, { merge: true }); 
+
+                showMessage('Produto atualizado com sucesso!');
+                resetFormState();
+            } catch (e) {
+                console.error("Erro ao atualizar documento: ", e);
+                showMessage(`Erro ao atualizar produto: ${e.message}`, true);
+            }
+        }
+
+        /** Exclui um produto do Firestore */
+        async function deleteProduct(id) {
+            if (!db || !isAuthReady) return showMessage("Erro: Conexão não estabelecida.", true);
+
+            const productRef = doc(db, PRODUCTS_COLLECTION_PATH, id);
+            try {
+                // Usando window.confirm() pois o aplicativo será hospedado externamente (Netlify)
+                if (window.confirm('Tem certeza que deseja excluir este produto?')) {
+                    await deleteDoc(productRef);
+                    showMessage('Produto excluído com sucesso!');
+                }
+            } catch (e) {
+                console.error("Erro ao excluir documento: ", e);
+                showMessage(`Erro ao excluir produto: ${e.message}`, true);
+            }
+        }
+
+
+        // --- Funções de Renderização e Pesquisa ---
+
+        function createProductCard(product, index) { // Recebe o index
+            const barcodeText = product.barcode ? `<p class="text-xs text-gray-400 mt-1">Cód: ${product.barcode}</p>` : '';
+            const quantityText = product.quantity !== undefined ? `<span class="font-semibold text-sm text-gray-700">Estoque: ${product.quantity}</span>` : '';
+            
+            const card = document.createElement('div');
+            card.className = 'bg-gray-50 p-4 border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition duration-200 flex justify-between items-center';
+            card.innerHTML = `
+                <div class="flex items-center">
+                    <!-- Número Sequencial -->
+                    <span class="text-2xl font-extrabold text-secondary mr-4 w-8 text-center">#${index + 1}</span>
+                    <div>
+                        <p class="text-lg font-bold text-gray-900">${product.name}</p>
+                        ${barcodeText}
+                        <p class="text-primary font-extrabold text-xl mt-1 flex items-center justify-between">
+                            ${formatCurrency(product.price)}
+                            ${quantityText ? `<span class="ml-4 text-sm text-gray-600 font-medium">| ${quantityText}</span>` : ''}
+                        </p>
+                    </div>
+                </div>
+                <div class="flex space-x-2">
+                    <!-- Botão de Edição -->
+                    <button data-id="${product.id}" class="edit-btn bg-blue-500 text-white p-2 rounded-full shadow-md hover:bg-blue-600 transition duration-150 transform hover:scale-105" title="Editar Produto">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                            <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <!-- Botão de Exclusão -->
+                    <button data-id="${product.id}" class="delete-btn bg-red-500 text-white p-2 rounded-full shadow-md hover:bg-red-600 transition duration-150 transform hover:scale-105" title="Excluir Produto">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 6v10h6V6H7z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            `;
+            return card;
+        }
+
+        function renderProducts(productsToRender) {
+            productsList.innerHTML = ''; 
+
+            if (productsToRender.length === 0) {
+                emptyState.classList.remove('hidden');
+                productsList.classList.add('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                productsList.classList.remove('hidden');
+
+                productsToRender.forEach((product, index) => { // Passando o index
+                    productsList.appendChild(createProductCard(product, index));
+                });
+            }
+
+            // Adiciona listener de clique para exclusão
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = e.currentTarget.dataset.id;
+                    if (productId) {
+                        deleteProduct(productId);
+                    }
+                });
+            });
+
+            // Adiciona listener de clique para edição
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = e.currentTarget.dataset.id;
+                    if (productId) {
+                        loadProductForEdit(productId);
+                    }
+                });
+            });
+        }
+
+        function loadProductForEdit(id) {
+            const product = allProducts.find(p => p.id === id);
+            if (!product) {
+                showMessage('Erro: Produto não encontrado para edição.', true);
+                return;
+            }
+
+            // 1. Atualiza o estado do formulário para Edição
+            formTitle.textContent = 'Editar Produto';
+            submitText.textContent = 'Atualizar Produto';
+            editingProductIdInput.value = id;
+
+            // 2. Preenche os campos
+            nameInput.value = product.name;
+            barcodeInput.value = product.barcode;
+            priceInput.value = parseFloat(product.price); 
+            quantityInput.value = parseInt(product.quantity); // Preenche a quantidade
+
+            // 3. Rola a tela para o formulário
+            document.getElementById('add-edit-section').scrollIntoView({ behavior: 'smooth' });
+            nameInput.focus();
+        }
+
+        function applySearchFilter() {
+            const searchText = searchInput.value.toLowerCase().trim();
+
+            if (searchText === '') {
+                renderProducts(allProducts);
+                return;
+            }
+
+            const filteredProducts = allProducts.filter(product =>
+                // Busca por nome
+                product.name.toLowerCase().includes(searchText) || 
+                // Busca por código de barras (se existir)
+                (product.barcode && product.barcode.toLowerCase().includes(searchText))
+            );
+            renderProducts(filteredProducts);
+        }
+
+        // --- Inicialização e Event Listeners ---
+        
+        // Event listener para o formulário de adição/edição
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!isAuthReady) {
+                showMessage('Aguarde a conexão com o banco de dados antes de salvar.', true);
+                return;
+            }
+
+            const name = nameInput.value.trim();
+            const price = priceInput.value.trim();
+            const barcode = barcodeInput.value.trim();
+            const quantity = quantityInput.value.trim(); // Captura a quantidade
+            const id = editingProductIdInput.value; 
+
+            if (name && price && !isNaN(parseFloat(price)) && !isNaN(parseInt(quantity))) { // Validação de Quantidade
+                submitBtn.disabled = true;
+                if (id) {
+                    await updateProduct(id, name, price, barcode, quantity); 
+                } else {
+                    await addProduct(name, price, barcode, quantity); 
+                }
+                submitBtn.disabled = false;
+            } else {
+                showMessage('Por favor, preencha o nome, preço e quantidade corretamente.', true);
+            }
+        });
+
+        // Event listener para a pesquisa
+        searchInput.addEventListener('input', applySearchFilter);
+        
+        // Event listener para exportação PDF
+        exportPdfBtn.addEventListener('click', exportToPDF);
+
+        // Inicializa o Firebase ao carregar a janela
+        window.onload = initializeFirebase;
+
+    </script>
+</body>
+</html>
