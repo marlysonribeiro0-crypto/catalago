@@ -3,571 +3,549 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo Compartilhado - Loja Agropecuária</title>
-    <!-- Carrega o Tailwind CSS para um design moderno e responsivo -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Bibliotecas para Exportação em PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- Configura o Tailwind para usar a fonte Inter e cores primárias -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        'primary': '#4f46e5',
-                        'primary-dark': '#4338ca',
-                        'secondary': '#facc15',
-                    }
-                }
-            }
-        }
-    </script>
+    <title>Agrovida+ | Produtos e Serviços Agropecuários em Trairão-PA</title>
+    <meta name="description" content="Produtos agropecuários, assistência técnica e orientação para produtores rurais em Trairão-PA. Agrovida+ — + Produtos e Serviços Agropecuários.">
     <style>
-        /* Estilo para a animação de carregamento (Spinner) */
-        .spinner {
-            border-top-color: #4f46e5;
-            -webkit-animation: spin 1s infinite linear;
-            animation: spin 1s infinite linear;
+        :root {
+            --verde-agro: #008000;
+            --verde-escuro: #005a00;
+            --amarelo-vida: #FFB800;
+            --amarelo-hover: #e5a500;
+            --preto: #1a1a1a;
+            --branco: #FFFFFF;
+            --cinza-bg: #f5f5f0;
+            --cinza-texto: #333333;
         }
 
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--cinza-texto); background: var(--branco); line-height: 1.6; }
+
+        /* HEADER */
+        header { background: var(--branco); padding: 0.8rem 2rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.08); border-bottom: 3px solid var(--verde-agro); }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .logo-area { display: flex; align-items: center; gap: 0.7rem; }
+        .logo-area img { width: 60px; height: auto; }
+        .logo-text { display: flex; flex-direction: column; line-height: 1; }
+        .logo-text .marca { font-size: 1.6rem; font-weight: 900; letter-spacing: -1px; }
+        .logo-text .marca .agro { color: var(--verde-agro); }
+        .logo-text .marca .vida { color: var(--amarelo-vida); }
+        .logo-text .marca .mais { color: var(--verde-agro); }
+        .logo-text .tagline { font-size: 0.7rem; color: var(--cinza-texto); font-weight: 600; letter-spacing: 0.5px; margin-top: 2px; }
+
+        nav ul { list-style: none; display: flex; gap: 1.5rem; }
+        nav a { color: var(--preto); text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: color 0.3s; }
+        nav a:hover { color: var(--verde-agro); }
+        .header-cta { background: var(--amarelo-vida); color: var(--preto); padding: 0.7rem 1.3rem; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.4rem; }
+        .header-cta:hover { background: var(--amarelo-hover); transform: translateY(-2px); }
+
+        /* HERO */
+        .hero { 
+            background: linear-gradient(135deg, var(--verde-escuro) 0%, var(--verde-agro) 100%); 
+            color: var(--branco); 
+            padding: 5rem 2rem 6rem; 
+            text-align: center; 
+            position: relative; 
+            overflow: hidden;
+        }
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: -50px; right: -50px;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, var(--amarelo-vida) 0%, transparent 70%);
+            opacity: 0.15;
+            border-radius: 50%;
+        }
+        .hero::after {
+            content: "";
+            position: absolute;
+            bottom: -100px; left: -100px;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, var(--amarelo-vida) 0%, transparent 70%);
+            opacity: 0.1;
+            border-radius: 50%;
+        }
+        .hero-content { max-width: 850px; margin: 0 auto; position: relative; z-index: 2; }
+        .hero-badges { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .badge { background: rgba(255,255,255,0.15); padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.85rem; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2); display: inline-flex; align-items: center; gap: 0.4rem; }
+        .badge .dot { width: 8px; height: 8px; background: #4CAF50; border-radius: 50%; }
+        .hero h1 { font-size: 3rem; font-weight: 900; margin-bottom: 1.2rem; line-height: 1.15; letter-spacing: -1px; }
+        .hero h1 span { color: var(--amarelo-vida); }
+        .hero p { font-size: 1.25rem; margin-bottom: 2.5rem; opacity: 0.95; max-width: 650px; margin-left: auto; margin-right: auto; }
+        .hero-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+        .btn { padding: 1.1rem 2.2rem; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 1.05rem; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.6rem; border: none; cursor: pointer; }
+        .btn-primary { background: var(--amarelo-vida); color: var(--preto); }
+        .btn-primary:hover { background: var(--amarelo-hover); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(255, 184, 0, 0.4); }
+        .btn-secondary { background: transparent; color: var(--branco); border: 2px solid var(--branco); }
+        .btn-secondary:hover { background: var(--branco); color: var(--verde-escuro); }
+
+        /* SECTIONS */
+        section { padding: 5rem 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-title { text-align: center; margin-bottom: 3.5rem; }
+        .section-tag { display: inline-block; background: var(--verde-agro); color: var(--branco); padding: 0.4rem 1.2rem; border-radius: 50px; font-size: 0.8rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1.5px; }
+        .section-title h2 { font-size: 2.3rem; color: var(--preto); margin-bottom: 0.7rem; font-weight: 800; letter-spacing: -0.5px; }
+        .section-title h2 span { color: var(--verde-agro); }
+        .section-title p { font-size: 1.1rem; color: #666; max-width: 600px; margin: 0 auto; }
+
+        /* SOBRE */
+        .sobre { background: var(--cinza-bg); }
+        .sobre-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .sobre-text h3 { font-size: 1.9rem; color: var(--preto); margin-bottom: 1.2rem; font-weight: 800; line-height: 1.2; }
+        .sobre-text h3 span { color: var(--verde-agro); }
+        .sobre-text p { margin-bottom: 1.2rem; font-size: 1.05rem; }
+        .sobre-text .destaque { background: var(--branco); border-left: 4px solid var(--amarelo-vida); padding: 1rem 1.2rem; border-radius: 0 10px 10px 0; margin: 1.5rem 0; font-weight: 600; color: var(--preto); }
+        .sobre-stats { display: flex; gap: 2.5rem; margin-top: 2rem; }
+        .stat { text-align: center; }
+        .stat-number { font-size: 2.8rem; font-weight: 900; color: var(--verde-agro); display: block; line-height: 1; }
+        .stat-label { font-size: 0.85rem; color: #666; margin-top: 0.3rem; }
+        .sobre-image { 
+            background: linear-gradient(135deg, var(--verde-agro), var(--verde-escuro)); 
+            height: 380px; 
+            border-radius: 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            box-shadow: 0 15px 40px rgba(0, 90, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            font-size: 5rem;
+        }
+        .sobre-image::before {
+            content: "";
+            position: absolute;
+            top: -30px; right: -30px;
+            width: 150px; height: 150px;
+            background: var(--amarelo-vida);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        /* ASSISTÊNCIA */
+        .assistencia-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.8rem; }
+        .assist-card { background: var(--branco); border: 2px solid #eee; border-radius: 16px; padding: 2rem; text-align: center; transition: all 0.3s; position: relative; overflow: hidden; }
+        .assist-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--amarelo-vida); transform: scaleX(0); transition: transform 0.3s; }
+        .assist-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); border-color: var(--verde-agro); }
+        .assist-card:hover::before { transform: scaleX(1); }
+        .assist-icon { font-size: 2.8rem; margin-bottom: 1rem; }
+        .assist-card h4 { color: var(--preto); margin-bottom: 0.6rem; font-size: 1.2rem; font-weight: 700; }
+        .assist-card p { font-size: 0.95rem; color: #666; }
+
+        /* PÚBLICO */
+        .publico { background: var(--preto); color: var(--branco); position: relative; overflow: hidden; }
+        .publico::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 128, 0, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 184, 0, 0.1) 0%, transparent 50%);
+        }
+        .publico .section-title h2 { color: var(--branco); }
+        .publico .section-title p { color: rgba(255,255,255,0.7); }
+        .publico-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; position: relative; z-index: 2; }
+        .publico-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2.2rem; backdrop-filter: blur(10px); transition: all 0.3s; }
+        .publico-card:hover { background: rgba(255,255,255,0.08); border-color: var(--amarelo-vida); transform: translateY(-5px); }
+        .publico-card .card-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .publico-card h4 { color: var(--amarelo-vida); margin-bottom: 1rem; font-size: 1.4rem; font-weight: 800; }
+        .publico-card p { color: rgba(255,255,255,0.8); margin-bottom: 1rem; font-size: 0.95rem; }
+        .publico-card ul { list-style: none; }
+        .publico-card li { margin-bottom: 0.6rem; padding-left: 1.5rem; position: relative; font-size: 0.95rem; color: rgba(255,255,255,0.9); }
+        .publico-card li::before { content: "✓"; position: absolute; left: 0; color: var(--amarelo-vida); font-weight: bold; }
+
+        /* ESTOQUE */
+        .estoque-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+        .estoque-item { background: var(--branco); padding: 1.8rem 1.5rem; border-radius: 14px; text-align: center; border: 2px solid #eee; transition: all 0.3s; position: relative; }
+        .estoque-item:hover { border-color: var(--verde-agro); transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
+        .estoque-item .icon { font-size: 2.5rem; margin-bottom: 0.7rem; }
+        .estoque-item h5 { color: var(--preto); margin-bottom: 0.4rem; font-size: 1.05rem; font-weight: 700; }
+        .estoque-item p { font-size: 0.85rem; color: #666; }
+        .estoque-item.destaque { background: linear-gradient(135deg, var(--verde-agro), var(--verde-escuro)); color: white; border: none; }
+        .estoque-item.destaque h5, .estoque-item.destaque p { color: white; }
+        .estoque-item.destaque .icon { font-size: 3rem; }
+
+        /* CONTATO */
+        .contato { background: var(--cinza-bg); }
+        .contato-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+        .info-box { background: var(--branco); padding: 2.5rem; border-radius: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .info-item { display: flex; align-items: flex-start; gap: 1.2rem; margin-bottom: 1.8rem; }
+        .info-item .icon { font-size: 1.3rem; background: var(--verde-agro); color: white; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 12px; flex-shrink: 0; }
+        .info-item h5 { color: var(--preto); margin-bottom: 0.3rem; font-size: 1rem; font-weight: 700; }
+        .info-item p, .info-item a { color: #666; text-decoration: none; font-size: 0.95rem; }
+        .info-item a:hover { color: var(--verde-agro); }
+        .map-placeholder { background: linear-gradient(135deg, #e8e8e0, #f5f5f0); height: 100%; min-height: 350px; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 1.2rem; padding: 2rem; text-align: center; }
+        .map-placeholder .pin { font-size: 4rem; }
+        .map-placeholder p { color: #666; font-weight: 600; }
+        .map-placeholder a { background: var(--verde-agro); color: white; padding: 0.9rem 1.8rem; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s; }
+        .map-placeholder a:hover { background: var(--verde-escuro); transform: translateY(-2px); }
+
+        /* CTA FINAL */
+        .cta-final { background: linear-gradient(135deg, var(--amarelo-vida) 0%, #ff9500 100%); color: var(--preto); text-align: center; padding: 4rem 2rem; }
+        .cta-final h2 { font-size: 2.2rem; font-weight: 900; margin-bottom: 1rem; }
+        .cta-final p { font-size: 1.15rem; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .cta-final .btn { background: var(--preto); color: var(--branco); }
+        .cta-final .btn:hover { background: var(--verde-escuro); }
+
+        /* FOOTER */
+        footer { background: var(--preto); color: rgba(255,255,255,0.7); padding: 3rem 2rem 1.5rem; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; margin-bottom: 2rem; }
+        .footer-brand .logo-text .marca { font-size: 1.8rem; }
+        .footer-brand p { margin-top: 1rem; font-size: 0.9rem; max-width: 300px; }
+        .footer-col h5 { color: var(--amarelo-vida); margin-bottom: 1rem; font-size: 1rem; font-weight: 700; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 0.6rem; }
+        .footer-col a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+        .footer-col a:hover { color: var(--amarelo-vida); }
+        .footer-bottom { max-width: 1200px; margin: 0 auto; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.85rem; }
+
+        /* WHATSAPP STICKY */
+        .whatsapp-sticky { position: fixed; bottom: 25px; right: 25px; background: #25D366; color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4); z-index: 99; text-decoration: none; transition: all 0.3s; animation: pulse 2s infinite; }
+        .whatsapp-sticky:hover { transform: scale(1.1); }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4); }
+            50% { box-shadow: 0 5px 25px rgba(37, 211, 102, 0.7); }
+        }
+
+        /* RESPONSIVO */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1.05rem; }
+            .section-title h2 { font-size: 1.7rem; }
+            .sobre-grid, .contato-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .footer-content { grid-template-columns: 1fr; gap: 2rem; }
+            nav ul { gap: 1rem; font-size: 0.85rem; }
+            .sobre-stats { gap: 1.5rem; }
+            .stat-number { font-size: 2rem; }
         }
     </style>
 </head>
-<body class="bg-gray-50 font-sans min-h-screen">
-    <div id="app" class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
-        <header class="text-center py-6 bg-white shadow-md rounded-xl mb-6">
-            <h1 class="text-3xl font-extrabold text-primary">
-                🛒 Catálogo Digital Compartilhado
-            </h1>
-            <p id="user-info" class="text-sm text-gray-500 mt-1 font-medium text-green-600">
-                ✅ Sincronização em Tempo Real (via Firebase)
-            </p>
-            <p id="status-message" class="text-sm text-red-500 mt-1 font-medium italic">
-                Aguardando conexão com o banco de dados...
-            </p>
-        </header>
+<body>
 
-        <!-- Seção para Adicionar/Editar Produto -->
-        <section class="bg-white p-6 rounded-xl shadow-lg mb-8" id="add-edit-section">
-            <h2 class="text-xl font-semibold mb-4 text-gray-800" id="form-title">Adicionar Novo Produto</h2>
-            <form id="add-product-form" class="space-y-4">
-                <!-- Alterado para 4 colunas em telas maiores -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4"> 
-                    <!-- Nome do Produto -->
-                    <div>
-                        <label for="product-name" class="block text-sm font-medium text-gray-700">Nome do Produto</label>
-                        <input type="text" id="product-name" required placeholder="Ex: Ração para Cães (15kg)"
-                               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary p-3 border">
+    <!-- HEADER -->
+    <header>
+        <div class="nav-container">
+            <div class="logo-area">
+                <img src="logo.png" alt="Agrovida+" style="width: 60px; height: auto;">
+                <div class="logo-text">
+                    <div class="marca">
+                        <span class="agro">AGRO</span><span class="vida">VIDA</span><span class="mais">+</span>
                     </div>
-                    <!-- Código de Barras / SKU -->
-                    <div>
-                        <label for="product-barcode" class="block text-sm font-medium text-gray-700">Cód. Barras/SKU (Opcional)</label>
-                        <input type="text" id="product-barcode" placeholder="Ex: 7891234567890"
-                               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary p-3 border">
-                    </div>
-                    <!-- Preço -->
-                    <div>
-                        <label for="product-price" class="block text-sm font-medium text-gray-700">Preço (R$)</label>
-                        <input type="number" step="0.01" id="product-price" required placeholder="Ex: 45.99"
-                               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary p-3 border">
-                    </div>
-                    <!-- Quantidade (Novo Campo) -->
-                    <div>
-                        <label for="product-quantity" class="block text-sm font-medium text-gray-700">Quantidade (Estoque)</label>
-                        <input type="number" step="1" id="product-quantity" required placeholder="Ex: 15" value="0"
-                               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary p-3 border">
-                    </div>
+                    <div class="tagline">+ PRODUTOS E SERVIÇOS AGROPECUÁRIOS</div>
                 </div>
-                <!-- Campo oculto para rastrear o ID durante a edição -->
-                <input type="hidden" id="editing-product-id" value="">
-                
-                <button type="submit" id="submit-btn" disabled
-                        class="w-full sm:w-auto px-6 py-3 bg-primary text-white font-bold rounded-lg shadow-md transition duration-150 transform disabled:opacity-50 disabled:cursor-not-allowed">
-                    <span id="submit-text">Aguarde...</span>
-                </button>
-            </form>
-            <div id="message-box" class="mt-4 p-3 rounded-lg text-sm hidden" role="alert"></div>
-        </section>
-
-        <!-- Seção de Busca e Listagem -->
-        <section class="bg-white p-6 rounded-xl shadow-lg">
-            <h2 class="text-xl font-semibold mb-4 text-gray-800">Pesquisar e Visualizar Catálogo</h2>
-
-            <div class="flex space-x-2 mb-6"> 
-                <!-- Campo de Busca -->
-                <input type="text" id="search-input" placeholder="🔍 Digite o Nome OU o Código de Barras para pesquisar..."
-                       class="flex-grow rounded-lg border-gray-300 shadow-inner focus:border-secondary focus:ring-secondary p-4 border text-lg">
-                
-                <!-- Botão Exportar PDF -->
-                <button id="export-pdf-btn" class="px-4 py-3 bg-secondary text-gray-900 font-bold rounded-lg shadow-md hover:bg-yellow-400 transition duration-150 transform flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed" title="Exportar Catálogo para PDF">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L6.953 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                    </svg>
-                    <span class="hidden sm:inline">PDF</span>
-                </button>
             </div>
+            <nav>
+                <ul>
+                    <li><a href="#sobre">Sobre</a></li>
+                    <li><a href="#servicos">Assistência</a></li>
+                    <li><a href="#produtos">Produtos</a></li>
+                    <li><a href="#local">Localização</a></li>
+                </ul>
+            </nav>
+            <a href="https://wa.me/5593974003487?text=Oi%2C%20vim%20pelo%20site%20da%20Agrovida%2B" class="header-cta">
+                💬 WhatsApp
+            </a>
+        </div>
+    </header>
 
-
-            <!-- Lista de Produtos -->
-            <div id="products-list-container" class="space-y-4">
-                 <div id="loading-spinner" class="text-center py-10">
-                    <div class="spinner inline-block w-8 h-8 border-4 border-gray-200 rounded-full" role="status"></div>
-                    <p class="text-gray-500 mt-2">Carregando dados em tempo real...</p>
-                </div>
-                <div id="products-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Produtos serão injetados aqui -->
-                </div>
-                <p id="empty-state" class="text-center text-gray-500 py-10 hidden">
-                    Nenhum produto encontrado. Adicione um novo item acima!
-                </p>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badges">
+                <span class="badge"><span class="dot"></span> Aberto agora · Fecha 18:30</span>
+                <span class="badge">⭐ 4,7 no Google</span>
+                <span class="badge">📍 Centro de Trairão-PA</span>
             </div>
-        </section>
-    </div>
+            <h1>Produto certo e <span>assistência técnica</span> pra sua propriedade rural</h1>
+            <p>Em Trairão, a Agrovida+ junta estoque completo — insumos, ferramentas, linha veterinária e equipamentos — com orientação de quem entende do assunto. Você sai da loja sabendo que levou o produto certo, na dose certa, pro seu negócio.</p>
+            <div class="hero-buttons">
+                <a href="https://wa.me/5593974003487?text=Oi%2C%20vim%20pelo%20site%20da%20Agrovida%2B%20e%20quero%20saber%20mais" class="btn btn-primary">
+                    💬 Chamar no WhatsApp
+                </a>
+                <a href="tel:+5593974003487" class="btn btn-secondary">
+                    📞 Ligar agora
+                </a>
+            </div>
+        </div>
+    </section>
 
-    <!-- Importações do Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, addDoc, setDoc, deleteDoc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        
-        // =====================================================================================
-        // 🚨 CONFIGURAÇÃO DO FIREBASE INSERIDA:
-        // Esta é a sua chave, copiada do seu console do Firebase.
-        // =====================================================================================
-        const MY_FIREBASE_CONFIG = {
-          apiKey: "AIzaSyADKJJpVytkrAGMHospUfCiaz4-asmrvho",
-          authDomain: "catalogoagrovida.firebaseapp.com",
-          projectId: "catalogoagrovida",
-          storageBucket: "catalogoagrovida.firebasestorage.app",
-          messagingSenderId: "117706444585",
-          appId: "1:117706444585:web:923621285cbdd700fbf138"
-        };
-        // =====================================================================================
-
-        const firebaseConfig = MY_FIREBASE_CONFIG;
-        
-        let db;
-        let auth;
-        let userId = 'anon_user';
-        let isAuthReady = false;
-
-        // O caminho da coleção no Firestore será 'products' 
-        const PRODUCTS_COLLECTION_PATH = `products`; 
-
-        // --- Elementos UI ---
-        const productsList = document.getElementById('products-list');
-        const form = document.getElementById('add-product-form');
-        const nameInput = document.getElementById('product-name');
-        const barcodeInput = document.getElementById('product-barcode'); 
-        const priceInput = document.getElementById('product-price');
-        const quantityInput = document.getElementById('product-quantity'); // NOVO
-        const searchInput = document.getElementById('search-input');
-        const emptyState = document.getElementById('empty-state');
-        const messageBox = document.getElementById('message-box');
-        const formTitle = document.getElementById('form-title');
-        const submitBtn = document.getElementById('submit-btn');
-        const submitText = document.getElementById('submit-text');
-        const editingProductIdInput = document.getElementById('editing-product-id');
-        const loadingSpinner = document.getElementById('loading-spinner');
-        const statusMessage = document.getElementById('status-message');
-        const exportPdfBtn = document.getElementById('export-pdf-btn');
-        const productsListContainer = document.getElementById('products-list-container'); 
-
-        let allProducts = []; // Lista de produtos em memória
-
-
-        // --- Funções Auxiliares de UI ---
-
-        function showMessage(text, isError = false) {
-            messageBox.textContent = text;
-            messageBox.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
-            if (isError) {
-                messageBox.classList.add('bg-red-100', 'text-red-700');
-            } else {
-                messageBox.classList.add('bg-green-100', 'text-green-700');
-            }
-            setTimeout(() => messageBox.classList.add('hidden'), 5000);
-        }
-
-        function formatCurrency(value) {
-            const number = parseFloat(value);
-            if (isNaN(number)) return 'R$ 0,00';
-            return number.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        }
-
-        function resetFormState() {
-            formTitle.textContent = 'Adicionar Novo Produto';
-            submitText.textContent = 'Salvar Produto';
-            editingProductIdInput.value = '';
-            form.reset();
-            nameInput.focus();
-        }
-
-
-        // --- Funções de Conexão Firebase ---
-
-        async function initializeFirebase() {
-            // Verifica a configuração fornecida pelo usuário
-            if (!firebaseConfig || !firebaseConfig.projectId) {
-                console.error("Firebase config is missing. Cannot initialize Firebase.");
-                statusMessage.textContent = 'ERRO: A chave de configuração está ausente ou inválida.';
-                return;
-            }
-            
-            try {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-
-                // Autenticação Anônima 
-                const userCredential = await signInAnonymously(auth);
-                userId = userCredential.user.uid;
-                
-                isAuthReady = true;
-                
-                statusMessage.textContent = `Status: Conectado em tempo real.`;
-                submitBtn.disabled = false;
-                exportPdfBtn.disabled = false; // Habilita o botão de exportação
-                submitText.textContent = 'Salvar Produto';
-                loadingSpinner.classList.add('hidden');
-
-                // Inicia o listener de dados em tempo real
-                setupRealtimeListener();
-
-            } catch (error) {
-                console.error("Firebase initialization or auth error:", error);
-                loadingSpinner.classList.add('hidden');
-                exportPdfBtn.disabled = true; // Desabilita o botão em caso de erro
-
-                if (error.code === 'auth/configuration-not-found') {
-                    statusMessage.textContent = `ERRO de Autenticação: Login Anônimo Desativado.`;
-                    showMessage('ERRO: Ative o Login Anônimo no console do Firebase!', true);
-                } else if (error.code === 'auth/admin-restricted-operation') {
-                    statusMessage.textContent = `ERRO de Autenticação: Domínio não autorizado.`;
-                    showMessage(`ERRO: Adicione '${window.location.host}' nas Configurações do seu projeto Firebase!`, true);
-                } else {
-                    statusMessage.textContent = `ERRO de Conexão: Verifique as regras do seu Firestore.`;
-                    showMessage(`Falha na conexão: ${error.message}`, true);
-                }
-            }
-        }
-        
-        /** Configura o listener em tempo real (onSnapshot) */
-        function setupRealtimeListener() {
-            if (!db || !isAuthReady) return;
-
-            const productsQuery = query(collection(db, PRODUCTS_COLLECTION_PATH));
-            
-            // onSnapshot observa mudanças e atualiza a lista em tempo real
-            onSnapshot(productsQuery, (snapshot) => {
-                const updatedProducts = [];
-                snapshot.forEach(doc => {
-                    updatedProducts.push({ id: doc.id, ...doc.data() });
-                });
-
-                allProducts = updatedProducts;
-                
-                // Ordena e renderiza
-                allProducts.sort((a, b) => a.name.localeCompare(b.name));
-                applySearchFilter(); 
-                
-            }, (error) => {
-                console.error("Erro no listener em tempo real:", error);
-                showMessage('Erro ao receber atualizações em tempo real.', true);
-            });
-        }
-
-        // --- Função de Exportação PDF ---
-
-        async function exportToPDF() {
-            if (allProducts.length === 0) {
-                return showMessage('O catálogo está vazio. Adicione produtos antes de exportar.', true);
-            }
-            
-            // 1. Prepara a UI para exportação (esconde botões de ação na lista)
-            document.querySelectorAll('.edit-btn, .delete-btn').forEach(btn => btn.style.display = 'none');
-            
-            // Cria um título temporário para o PDF
-            const pdfTitle = document.createElement('h3');
-            pdfTitle.textContent = "Catálogo de Produtos - Loja Agropecuária";
-            pdfTitle.className = "text-center text-xl font-bold mb-4 text-gray-800";
-            productsListContainer.prepend(pdfTitle);
-
-            // 2. Captura o conteúdo
-            try {
-                // Remove o campo de busca e o botão PDF antes de capturar
-                const searchArea = searchInput.closest('div.flex');
-                if (searchArea) searchArea.style.display = 'none';
-
-                const canvas = await html2canvas(productsListContainer, { 
-                    scale: 2, // Aumenta a resolução para melhor qualidade no PDF
-                    logging: false,
-                    useCORS: true 
-                });
-
-                // 3. Cria o PDF
-                const { jsPDF } = window.jspdf;
-                const imgData = canvas.toDataURL('image/png');
-                const imgWidth = 200; // Largura do PDF (A4 é ~210mm)
-                const pageHeight = 295; 
-                const imgHeight = canvas.height * imgWidth / canvas.width;
-                let heightLeft = imgHeight;
-
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                let position = 0;
-
-                pdf.addImage(imgData, 'PNG', 5, position + 5, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-
-                while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 5, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
-                }
-
-                // 4. Salva o arquivo
-                pdf.save(`catalogo-agrovida-${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.pdf`);
-
-            } catch (error) {
-                console.error("Erro ao gerar PDF:", error);
-                showMessage('Erro ao gerar PDF. Tente novamente ou verifique o console.', true);
-            } finally {
-                // 5. Restaura a UI
-                document.querySelectorAll('.edit-btn, .delete-btn').forEach(btn => btn.style.display = '');
-                pdfTitle.remove();
-                if (searchArea) searchArea.style.display = 'flex'; // Restaura a área de busca/PDF
-            }
-        }
-        
-        // --- Funções CRUD (Firebase Firestore) ---
-
-        /** Adiciona um novo produto ao Firestore */
-        async function addProduct(name, price, barcode, quantity) { // Adicionado quantity
-            if (!db || !isAuthReady) return showMessage("Erro: Conexão não estabelecida.", true);
-
-            const newProductData = {
-                name: name,
-                price: parseFloat(price).toFixed(2), 
-                barcode: barcode,
-                quantity: parseInt(quantity), // Salva como número inteiro
-                createdAt: new Date().toISOString(),
-                userId: userId 
-            };
-
-            try {
-                await addDoc(collection(db, PRODUCTS_COLLECTION_PATH), newProductData);
-                showMessage('Produto adicionado com sucesso!');
-                resetFormState();
-            } catch (e) {
-                console.error("Erro ao adicionar documento: ", e);
-                showMessage(`Erro ao salvar produto: ${e.message}`, true);
-            }
-        }
-        
-        /** Atualiza um produto existente no Firestore */
-        async function updateProduct(id, name, price, barcode, quantity) { // Adicionado quantity
-            if (!db || !isAuthReady) return showMessage("Erro: Conexão não estabelecida.", true);
-            
-            const productRef = doc(db, PRODUCTS_COLLECTION_PATH, id);
-            
-            try {
-                await setDoc(productRef, {
-                    name: name,
-                    price: parseFloat(price).toFixed(2),
-                    barcode: barcode,
-                    quantity: parseInt(quantity), // Salva como número inteiro
-                    updatedAt: new Date().toISOString(),
-                }, { merge: true }); 
-
-                showMessage('Produto atualizado com sucesso!');
-                resetFormState();
-            } catch (e) {
-                console.error("Erro ao atualizar documento: ", e);
-                showMessage(`Erro ao atualizar produto: ${e.message}`, true);
-            }
-        }
-
-        /** Exclui um produto do Firestore */
-        async function deleteProduct(id) {
-            if (!db || !isAuthReady) return showMessage("Erro: Conexão não estabelecida.", true);
-
-            const productRef = doc(db, PRODUCTS_COLLECTION_PATH, id);
-            try {
-                // Usando window.confirm() pois o aplicativo será hospedado externamente (Netlify)
-                if (window.confirm('Tem certeza que deseja excluir este produto?')) {
-                    await deleteDoc(productRef);
-                    showMessage('Produto excluído com sucesso!');
-                }
-            } catch (e) {
-                console.error("Erro ao excluir documento: ", e);
-                showMessage(`Erro ao excluir produto: ${e.message}`, true);
-            }
-        }
-
-
-        // --- Funções de Renderização e Pesquisa ---
-
-        function createProductCard(product, index) { // Recebe o index
-            const barcodeText = product.barcode ? `<p class="text-xs text-gray-400 mt-1">Cód: ${product.barcode}</p>` : '';
-            const quantityText = product.quantity !== undefined ? `<span class="font-semibold text-sm text-gray-700">Estoque: ${product.quantity}</span>` : '';
-            
-            const card = document.createElement('div');
-            card.className = 'bg-gray-50 p-4 border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition duration-200 flex justify-between items-center';
-            card.innerHTML = `
-                <div class="flex items-center">
-                    <!-- Número Sequencial -->
-                    <span class="text-2xl font-extrabold text-secondary mr-4 w-8 text-center">#${index + 1}</span>
-                    <div>
-                        <p class="text-lg font-bold text-gray-900">${product.name}</p>
-                        ${barcodeText}
-                        <p class="text-primary font-extrabold text-xl mt-1 flex items-center justify-between">
-                            ${formatCurrency(product.price)}
-                            ${quantityText ? `<span class="ml-4 text-sm text-gray-600 font-medium">| ${quantityText}</span>` : ''}
-                        </p>
+    <!-- SOBRE -->
+    <section class="sobre" id="sobre">
+        <div class="container">
+            <div class="sobre-grid">
+                <div class="sobre-text">
+                    <span class="section-tag">Quem somos</span>
+                    <h3>Mais que uma loja: um <span>ponto de apoio</span> pra quem produz</h3>
+                    <p>A Agrovida+ nasceu em Trairão pra resolver um problema comum de quem vive do campo: achar produto de qualidade e, junto com ele, alguém que saiba indicar a solução certa — sem enrolação e sem venda empurrada.</p>
+                    <div class="destaque">
+                        O "+" no nome é isso: <strong>produto e serviço</strong>, no mesmo balcão.
+                    </div>
+                    <p>Atendemos produtores rurais, fazendeiros e donos de pet da região — sempre com foco em resolver o problema, não só em vender o item.</p>
+                    <div class="sobre-stats">
+                        <div class="stat">
+                            <span class="stat-number">4,7</span>
+                            <span class="stat-label">Nota no Google</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">+10</span>
+                            <span class="stat-label">Anos de experiência</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Foco no cliente</span>
+                        </div>
                     </div>
                 </div>
-                <div class="flex space-x-2">
-                    <!-- Botão de Edição -->
-                    <button data-id="${product.id}" class="edit-btn bg-blue-500 text-white p-2 rounded-full shadow-md hover:bg-blue-600 transition duration-150 transform hover:scale-105" title="Editar Produto">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                            <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
-                        </svg>
-                    </button>
-                    <!-- Botão de Exclusão -->
-                    <button data-id="${product.id}" class="delete-btn bg-red-500 text-white p-2 rounded-full shadow-md hover:bg-red-600 transition duration-150 transform hover:scale-105" title="Excluir Produto">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 6v10h6V6H7z" clip-rule="evenodd" />
-                        </svg>
-                    </button>
+                <div class="sobre-image">🌾</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ASSISTÊNCIA -->
+    <section id="servicos">
+        <div class="container">
+            <div class="section-title">
+                <span class="section-tag">Serviço em destaque</span>
+                <h2>Assistência técnica e <span>orientação</span></h2>
+                <p>Produto errado ou dose errada dá prejuízo. Por isso, antes de fechar a compra, você conversa com quem entende.</p>
+            </div>
+            <div class="assistencia-grid">
+                <div class="assist-card">
+                    <div class="assist-icon">🎯</div>
+                    <h4>Orientação na compra</h4>
+                    <p>Indicação do produto certo pro seu caso, não o mais caro. Atendimento técnico antes da venda.</p>
                 </div>
-            `;
-            return card;
-        }
+                <div class="assist-card">
+                    <div class="assist-icon">🌱</div>
+                    <h4>Suporte técnico</h4>
+                    <p>Dúvidas sobre insumos, manejo, nutrição e cuidados com a produção rural.</p>
+                </div>
+                <div class="assist-card">
+                    <div class="assist-icon">💉</div>
+                    <h4>Linha veterinária</h4>
+                    <p>Orientação sobre vacinação, vermifugação e prevenção de doenças.</p>
+                </div>
+                <div class="assist-card">
+                    <div class="assist-icon">📱</div>
+                    <h4>Atendimento pelo WhatsApp</h4>
+                    <p>Manda a dúvida antes de ir até a loja e já chega sabendo o que precisa.</p>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="https://wa.me/5593974003487?text=Oi%2C%20quero%20orienta%C3%A7%C3%A3o%20t%C3%A9cnica%20com%20a%20Agrovida%2B" class="btn btn-primary">
+                     Falar com a assistência técnica
+                </a>
+            </div>
+        </div>
+    </section>
 
-        function renderProducts(productsToRender) {
-            productsList.innerHTML = ''; 
+    <!-- PÚBLICO -->
+    <section class="publico">
+        <div class="container">
+            <div class="section-title">
+                <span class="section-tag" style="background: var(--amarelo-vida); color: var(--preto);">Pra quem é</span>
+                <h2>Feito pra quem trabalha com o <span style="color: var(--amarelo-vida);">campo</span></h2>
+                <p>Atendemos quem vive da terra e da produção rural na região de Trairão.</p>
+            </div>
+            <div class="publico-grid">
+                <div class="publico-card">
+                    <div class="card-icon">🌾</div>
+                    <h4>Produtor Rural</h4>
+                    <p>Insumos e ferramentas pra sua propriedade render mais.</p>
+                    <ul>
+                        <li>Sementes e mudas</li>
+                        <li>Adubos e corretivos</li>
+                        <li>Defensivos agrícolas</li>
+                        <li>Ferramentas e equipamentos</li>
+                        <li>Vestuário e EPIs</li>
+                    </ul>
+                </div>
+                <div class="publico-card">
+                    <div class="card-icon">🐄</div>
+                    <h4>Fazendeiro / Criador</h4>
+                    <p>Produtos pra criação e manejo do seu rebanho.</p>
+                    <ul>
+                        <li>Ração e suplementos</li>
+                        <li>Linha veterinária completa</li>
+                        <li>Equipamento de manejo</li>
+                        <li>Material para curral e cerca</li>
+                        <li>Sanidade animal</li>
+                    </ul>
+                </div>
+                <div class="publico-card">
+                    <div class="card-icon">🐾</div>
+                    <h4>Dono de Pet</h4>
+                    <p>Cuidado também pro animal de estimação da família.</p>
+                    <ul>
+                        <li>Ração premium e standard</li>
+                        <li>Medicamentos veterinários</li>
+                        <li>Antipulgas e vermífugos</li>
+                        <li>Acessórios e higiene</li>
+                        <li>Orientação veterinária</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            if (productsToRender.length === 0) {
-                emptyState.classList.remove('hidden');
-                productsList.classList.add('hidden');
-            } else {
-                emptyState.classList.add('hidden');
-                productsList.classList.remove('hidden');
+    <!-- ESTOQUE -->
+    <section id="produtos">
+        <div class="container">
+            <div class="section-title">
+                <span class="section-tag">No estoque</span>
+                <h2>O que você encontra na <span>Agrovida+</span></h2>
+                <p>Linha completa pra quem produz no campo. Se não tiver na prateleira, a gente ajuda a encontrar.</p>
+            </div>
+            <div class="estoque-grid">
+                <div class="estoque-item">
+                    <div class="icon"></div>
+                    <h5>Sementes & Mudas</h5>
+                    <p>Pasto, horta e lavoura</p>
+                </div>
+                <div class="estoque-item">
+                    <div class="icon">🧪</div>
+                    <h5>Defensivos & Adubos</h5>
+                    <p>Controle de praga e nutrição do solo</p>
+                </div>
+                <div class="estoque-item destaque">
+                    <div class="icon"></div>
+                    <h5>Nutrição Animal</h5>
+                    <p>Ração, sal mineral e suplemento</p>
+                </div>
+                <div class="estoque-item">
+                    <div class="icon">💉</div>
+                    <h5>Linha Veterinária</h5>
+                    <p>Vacina, vermífugo e antibiótico</p>
+                </div>
+                <div class="estoque-item">
+                    <div class="icon">🔧</div>
+                    <h5>Ferramentas</h5>
+                    <p>Do cabo de enxada ao pulverizador</p>
+                </div>
+                <div class="estoque-item">
+                    <div class="icon">🧵</div>
+                    <h5>Material de Cerca</h5>
+                    <p>Arame, mourão e ferragem pra curral</p>
+                </div>
+                <div class="estoque-item">
+                    <div class="icon">🥾</div>
+                    <h5>Vestuário & Botas</h5>
+                    <p>Roupa, bota e EPI pro dia a dia</p>
+                </div>
+                <div class="estoque-item">
+                    <div class="icon">🐾</div>
+                    <h5>Pet Shop</h5>
+                    <p>Ração, remédio e acessório pra cachorro e gato</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                productsToRender.forEach((product, index) => { // Passando o index
-                    productsList.appendChild(createProductCard(product, index));
-                });
-            }
+    <!-- CONTATO -->
+    <section class="contato" id="local">
+        <div class="container">
+            <div class="section-title">
+                <span class="section-tag">Como chegar</span>
+                <h2>Encontre a Agrovida+ no <span>Centro de Trairão</span></h2>
+                <p>Fácil de achar, no coração da cidade. Venha nos visitar ou chame no WhatsApp.</p>
+            </div>
+            <div class="contato-grid">
+                <div class="info-box">
+                    <div class="info-item">
+                        <div class="icon">📍</div>
+                        <div>
+                            <h5>Endereço</h5>
+                            <p>Tv. Horizonte - Centro, Trairão - PA, 68198-000</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="icon">📞</div>
+                        <div>
+                            <h5>Telefone</h5>
+                            <a href="tel:+5593974003487">(93) 97400-3487</a>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="icon"></div>
+                        <div>
+                            <h5>Horário de funcionamento</h5>
+                            <p>Aberto agora · Fecha às 18:30</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="icon">⭐</div>
+                        <div>
+                            <h5>Avaliação</h5>
+                            <p>4,7 de 5 — 3 avaliações no Google</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Agrovida+Tv.+Horizonte+Centro+Trairão+PA" class="btn btn-primary" style="flex: 1; justify-content: center; min-width: 200px;">
+                            🧭 Traçar rota
+                        </a>
+                        <a href="https://wa.me/5593974003487" class="btn btn-secondary" style="flex: 1; justify-content: center; min-width: 200px; border-color: var(--verde-agro); color: var(--verde-agro);">
+                             WhatsApp
+                        </a>
+                    </div>
+                </div>
+                <div class="map-placeholder">
+                    <div class="pin"></div>
+                    <p>Tv. Horizonte - Centro<br>Trairão - PA</p>
+                    <a href="https://www.google.com/maps/search/?api=1&query=Agrovida+Tv.+Horizonte+Centro+Trairão+PA">
+                        🧭 Abrir no Google Maps
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            // Adiciona listener de clique para exclusão
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const productId = e.currentTarget.dataset.id;
-                    if (productId) {
-                        deleteProduct(productId);
-                    }
-                });
-            });
+    <!-- CTA FINAL -->
+    <section class="cta-final">
+        <h2>Não saia no chute na hora de comprar</h2>
+        <p>Chama no WhatsApp, confirma se tem em estoque e já fala com a assistência técnica antes de decidir.</p>
+        <a href="https://wa.me/5593974003487?text=Oi%2C%20vim%20pelo%20site%20da%20Agrovida%2B%20e%20quero%20saber%20mais" class="btn">
+            💬 Chamar no WhatsApp
+        </a>
+    </section>
 
-            // Adiciona listener de clique para edição
-            document.querySelectorAll('.edit-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const productId = e.currentTarget.dataset.id;
-                    if (productId) {
-                        loadProductForEdit(productId);
-                    }
-                });
-            });
-        }
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="logo-text">
+                    <div class="marca">
+                        <span class="agro">AGRO</span><span class="vida">VIDA</span><span class="mais">+</span>
+                    </div>
+                </div>
+                <p>+ Produtos e Serviços Agropecuários. Ponto de apoio pra quem vive do campo em Trairão-PA.</p>
+            </div>
+            <div class="footer-col">
+                <h5>Navegação</h5>
+                <ul>
+                    <li><a href="#sobre">Sobre</a></li>
+                    <li><a href="#servicos">Assistência técnica</a></li>
+                    <li><a href="#produtos">Produtos</a></li>
+                    <li><a href="#local">Como chegar</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>Contato</h5>
+                <ul>
+                    <li><a href="tel:+5593974003487">📞 (93) 97400-3487</a></li>
+                    <li><a href="https://wa.me/5593974003487">💬 WhatsApp</a></li>
+                    <li>📍 Tv. Horizonte, Centro</li>
+                    <li>Trairão - PA</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Agrovida+ · Produtos e serviços agropecuários · Trairão-PA</p>
+        </div>
+    </footer>
 
-        function loadProductForEdit(id) {
-            const product = allProducts.find(p => p.id === id);
-            if (!product) {
-                showMessage('Erro: Produto não encontrado para edição.', true);
-                return;
-            }
+    <!-- WHATSAPP STICKY -->
+    <a href="https://wa.me/5593974003487?text=Oi%2C%20vim%20pelo%20site%20da%20Agrovida%2B" class="whatsapp-sticky" aria-label="WhatsApp">
+        💬
+    </a>
 
-            // 1. Atualiza o estado do formulário para Edição
-            formTitle.textContent = 'Editar Produto';
-            submitText.textContent = 'Atualizar Produto';
-            editingProductIdInput.value = id;
-
-            // 2. Preenche os campos
-            nameInput.value = product.name;
-            barcodeInput.value = product.barcode;
-            priceInput.value = parseFloat(product.price); 
-            quantityInput.value = parseInt(product.quantity); // Preenche a quantidade
-
-            // 3. Rola a tela para o formulário
-            document.getElementById('add-edit-section').scrollIntoView({ behavior: 'smooth' });
-            nameInput.focus();
-        }
-
-        function applySearchFilter() {
-            const searchText = searchInput.value.toLowerCase().trim();
-
-            if (searchText === '') {
-                renderProducts(allProducts);
-                return;
-            }
-
-            const filteredProducts = allProducts.filter(product =>
-                // Busca por nome
-                product.name.toLowerCase().includes(searchText) || 
-                // Busca por código de barras (se existir)
-                (product.barcode && product.barcode.toLowerCase().includes(searchText))
-            );
-            renderProducts(filteredProducts);
-        }
-
-        // --- Inicialização e Event Listeners ---
-        
-        // Event listener para o formulário de adição/edição
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            if (!isAuthReady) {
-                showMessage('Aguarde a conexão com o banco de dados antes de salvar.', true);
-                return;
-            }
-
-            const name = nameInput.value.trim();
-            const price = priceInput.value.trim();
-            const barcode = barcodeInput.value.trim();
-            const quantity = quantityInput.value.trim(); // Captura a quantidade
-            const id = editingProductIdInput.value; 
-
-            if (name && price && !isNaN(parseFloat(price)) && !isNaN(parseInt(quantity))) { // Validação de Quantidade
-                submitBtn.disabled = true;
-                if (id) {
-                    await updateProduct(id, name, price, barcode, quantity); 
-                } else {
-                    await addProduct(name, price, barcode, quantity); 
-                }
-                submitBtn.disabled = false;
-            } else {
-                showMessage('Por favor, preencha o nome, preço e quantidade corretamente.', true);
-            }
-        });
-
-        // Event listener para a pesquisa
-        searchInput.addEventListener('input', applySearchFilter);
-        
-        // Event listener para exportação PDF
-        exportPdfBtn.addEventListener('click', exportToPDF);
-
-        // Inicializa o Firebase ao carregar a janela
-        window.onload = initializeFirebase;
-
-    </script>
 </body>
 </html>
