@@ -12,7 +12,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AgroVida+">
 <meta name="application-name" content="AgroVida+">
-<link rel="manifest" id="pwaManifestLink">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -319,6 +321,71 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* ══════════ v7 MOBILE APP ══════════ */
+.app-bar{display:none}
+.tx-form{display:flex;flex-direction:column;gap:10px}
+.tx-label{display:block;font-size:11px;font-weight:700;color:#6b7280;margin-bottom:4px;text-transform:uppercase}
+.tx-row{display:flex;gap:10px;align-items:flex-end}
+.tx-row>*{min-width:0}
+.tx-qty{flex:0 0 128px}
+.tx-grow{flex:1 1 0}
+.tx-form .input-field{min-height:48px;padding:10px 14px}
+.qty-stepper{display:flex;height:48px;border:2px solid #e5e7eb;border-radius:10px;background:#fff;overflow:hidden}
+.qty-stepper:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,144,54,.1)}
+.qty-stepper button{width:38px;border:0;background:#f3f4f6;color:#065f46;font-size:22px;font-weight:800;line-height:1}
+.qty-stepper button:active{background:#d1fae5}
+.qty-stepper input{flex:1;min-width:0;width:100%;border:0;outline:0;text-align:center;font-weight:800;font-size:17px;padding:0;background:#fff;-moz-appearance:textfield}
+.qty-stepper input::-webkit-outer-spin-button,.qty-stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.cart-item{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid #eef0f2}
+.cart-item.cart-fiado{background:#fffbeb}
+.ci-main{flex:1;min-width:0}
+.ci-desc{font-weight:700;font-size:14px;color:#1f2937;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ci-meta{font-size:11px;color:#6b7280;margin-top:1px}
+.ci-total{font-weight:800;color:var(--primary);font-size:14px;white-space:nowrap}
+.ci-del{width:40px;height:40px;border:0;background:#fef2f2;color:#ef4444;border-radius:10px}
+@media (max-width:768px){
+  html,body{overscroll-behavior:none}
+  .app-bar{display:flex;position:fixed;top:0;left:0;right:0;z-index:900;align-items:center;justify-content:center;
+    height:calc(56px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top);background:var(--primary);color:#fff;font-weight:800;font-size:17px;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+  .mobile-menu-btn{top:calc(env(safe-area-inset-top) + 5px);left:6px;background:transparent;box-shadow:none;width:46px;height:46px}
+  main{height:100dvh!important;padding:calc(66px + env(safe-area-inset-top)) 12px calc(86px + env(safe-area-inset-bottom))!important}
+  .mobile-bottom-nav{padding:4px 0 env(safe-area-inset-bottom);box-shadow:0 -2px 12px rgba(0,0,0,.06)}
+  .mobile-bottom-nav button{font-size:10px;min-height:54px;border-radius:12px;margin:0 1px}
+  .mobile-bottom-nav button.active{background:#ecfdf5;font-weight:700}
+  .sticky-cart-mobile{bottom:calc(72px + env(safe-area-inset-bottom))}
+  .notification{top:calc(62px + env(safe-area-inset-top))}
+  #pwa-install-banner{left:12px!important;right:12px!important;bottom:calc(80px + env(safe-area-inset-bottom))!important;max-width:none!important}
+  /* modais viram "gaveta" */
+  .modal-overlay{align-items:flex-end}
+  .modal-content{width:100%;max-width:100%;border-radius:20px 20px 0 0;max-height:92dvh;padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+  /* abas roláveis */
+  div:has(>.fiado-tab-btn),div:has(>.profit-tab-btn),.profit-report-tabs{overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
+  .fiado-tab-btn,.profit-tab-btn{white-space:nowrap}
+  /* tabelas viram cartões */
+  .table-responsive{overflow-x:visible}
+  .table-responsive table{min-width:0!important;display:block}
+  .table-responsive thead{display:none}
+  .table-responsive tbody,.table-responsive tfoot{display:block}
+  .table-responsive tbody tr{display:grid;grid-template-columns:1fr 1fr;column-gap:12px;row-gap:6px;padding:12px 14px;border-bottom:1px solid #eef0f2}
+  .table-responsive tfoot tr{display:flex;justify-content:space-between;gap:8px;padding:12px 14px}
+  .table-responsive td{display:block;padding:0!important;text-align:left!important;min-width:0;border:0!important;word-break:break-word}
+  .table-responsive td[data-label]:not([data-label=""])::before{content:attr(data-label);display:block;font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;margin-bottom:1px}
+  .table-responsive td:first-child,.table-responsive td[colspan],.table-responsive td.tc-act{grid-column:1/-1}
+  .table-responsive td.tc-act{display:flex;justify-content:flex-end;gap:14px}
+  .table-responsive td.tc-act button{min-width:44px;min-height:40px}
+  /* Movimentação do dia: cartão compacto */
+  #todayTableBody tr{grid-template-columns:auto 1fr auto;grid-template-areas:"tipo hora del" "desc desc desc" "cat pgto valor";align-items:center}
+  #todayTableBody td::before{display:none!important}
+  #todayTableBody td:nth-child(1):not([colspan]){grid-area:tipo}
+  #todayTableBody td:nth-child(2):not([colspan]){grid-area:hora;text-align:right!important}
+  #todayTableBody td:nth-child(3):not([colspan]){grid-area:desc;font-size:15px}
+  #todayTableBody td:nth-child(4):not([colspan]){grid-area:cat}
+  #todayTableBody td:nth-child(5):not([colspan]){grid-area:pgto;font-size:11px;padding-left:8px!important}
+  #todayTableBody td:nth-child(6):not([colspan]){grid-area:valor;text-align:right!important;font-size:16px}
+  #todayTableBody td:nth-child(7):not([colspan]){grid-area:del}
+}
+
 </style>
 </head>
 <body class="flex flex-col md:flex-row">
@@ -337,6 +404,7 @@ body {
   <button onclick="pwaDismissBanner()" class="text-gray-400 hover:text-gray-600 text-sm flex-shrink-0" style="background:none;border:none;padding:2px 6px" aria-label="Fechar"><i class="fas fa-times"></i></button>
 </div>
 
+<div class="app-bar"><span>AgroVida+</span></div>
 <div id="mobileOverlay" class="mobile-overlay" onclick="toggleSidebar()"></div>
 <button id="mobileMenuBtn" class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
   <i class="fas fa-bars text-lg"></i>
@@ -356,7 +424,7 @@ body {
     <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span> Online
   </div>
   <nav class="mt-3 flex-1 overflow-y-auto" id="sidebarNav"></nav>
-  <div class="p-3 text-center text-xs text-white/50">v6.6.0 PWA Mobile ⚡ AgroVida+</div>
+  <div class="p-3 text-center text-xs text-white/50">v7.0 Mobile · AgroVida+</div>
 </aside>
 
 <!-- MAIN -->
@@ -477,39 +545,42 @@ body {
           </div>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-12 gap-3 items-end">
-          <div class="col-span-1 md:col-span-1" id="qtdFieldWrapper">
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Qtd</label>
-            <input type="number" id="itemQty" class="input-field text-center" value="1" min="0.01" step="0.01" placeholder="1" inputmode="decimal">
+        <div class="tx-form">
+          <div class="relative">
+            <label class="tx-label" id="transactionLabel">Produto</label>
+            <input type="text" id="desc" class="input-field" placeholder="Ex: Ração…" required autocomplete="off" enterkeyhint="next">
+            <div id="descSuggestions" class="search-suggestions hidden"></div>
           </div>
-          <div class="col-span-1 md:col-span-4">
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1" id="transactionLabel">Produto</label>
-            <div class="relative">
-              <input type="text" id="desc" class="input-field" placeholder="Ex: Ração..." required autocomplete="off" enterkeyhint="next">
-              <div id="descSuggestions" class="search-suggestions hidden"></div>
+          <div class="tx-row">
+            <div class="tx-qty" id="qtdFieldWrapper">
+              <label class="tx-label">Qtd</label>
+              <div class="qty-stepper">
+                <button type="button" onclick="stepQty(-1)" aria-label="Diminuir">−</button>
+                <input type="number" id="itemQty" value="1" min="0.01" step="0.01" inputmode="decimal">
+                <button type="button" onclick="stepQty(1)" aria-label="Aumentar">+</button>
+              </div>
+            </div>
+            <div class="tx-grow">
+              <label class="tx-label">Valor unit. (R$)</label>
+              <input type="text" id="value" class="input-field text-right" placeholder="0,00" required inputmode="decimal" enterkeyhint="done">
             </div>
           </div>
-          <div class="col-span-1 md:col-span-2">
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Categoria</label>
-            <select id="category" class="input-field"></select>
+          <div class="tx-row">
+            <div class="tx-grow">
+              <label class="tx-label">Categoria</label>
+              <select id="category" class="input-field"></select>
+            </div>
+            <div class="tx-grow" id="paymentWrapper">
+              <label class="tx-label">Pagamento</label>
+              <select id="payment" class="input-field">
+                <option>Dinheiro</option><option>Pix</option><option>Débito</option><option>Crédito</option><option>Fiado/Prazo</option>
+              </select>
+            </div>
           </div>
-          <div class="col-span-1 md:col-span-2">
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Valor Unit. (R$)</label>
-            <input type="text" id="value" class="input-field text-right" placeholder="0,00" required inputmode="decimal" enterkeyhint="done">
+          <div id="itemTotalPreview" class="hidden flex items-center justify-between text-sm text-gray-500 bg-green-50 rounded-lg px-3 py-2">
+            <span>Subtotal</span><span id="itemTotalValue" class="font-bold text-agro-green text-base">R$ 0,00</span>
           </div>
-          <div class="col-span-1 md:col-span-2" id="paymentWrapper">
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Pagamento</label>
-            <select id="payment" class="input-field">
-              <option>Dinheiro</option><option>Pix</option><option>Débito</option><option>Crédito</option><option>Fiado/Prazo</option>
-            </select>
-          </div>
-          <div class="col-span-2 md:col-span-1">
-            <button onclick="handleTransactionAction()" id="addTransactionBtn" class="btn-primary w-full"><i class="fas fa-cart-plus mr-1"></i> Adicionar</button>
-          </div>
-        </div>
-
-        <div id="itemTotalPreview" class="hidden mt-3 text-right text-sm text-gray-500 bg-green-50 rounded-lg px-3 py-2">
-          Subtotal: <span id="itemTotalValue" class="font-bold text-agro-green text-base">R$ 0,00</span>
+          <button onclick="handleTransactionAction()" id="addTransactionBtn" class="btn-primary w-full"><i class="fas fa-cart-plus mr-1"></i> Adicionar</button>
         </div>
 
         <div id="saleCartSection" class="mt-5 hidden">
@@ -521,14 +592,7 @@ body {
             <div id="cartFiadoWarning" class="hidden mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800">
               <i class="fas fa-info-circle mr-2"></i><strong>Item(s) Fiado/Prazo</strong> — ao finalizar, escolha o cliente.
             </div>
-            <div class="table-responsive bg-gray-50 rounded-lg border">
-              <table class="w-full text-sm">
-                <thead class="bg-gray-200 text-gray-600 uppercase text-xs font-bold">
-                  <tr><th class="p-2 text-left">Produto</th><th class="p-2 text-center">Qtd</th><th class="p-2 text-left">Cat.</th><th class="p-2 text-left">Pgto</th><th class="p-2 text-right">Unit.</th><th class="p-2 text-right">Total</th><th class="p-2 text-center">✕</th></tr>
-                </thead>
-                <tbody id="cartTableBody"></tbody>
-              </table>
-            </div>
+            <div id="cartTableBody" class="cart-list"></div>
             <button onclick="finalizeSale()" id="finalizeSaleBtn" class="btn-finalize flex items-center justify-center mt-3" disabled>
               <i class="fas fa-check-circle mr-2"></i> Finalizar Venda (<span id="finalizeCount">0</span> itens — <span id="finalizeTotalSpan">R$ 0,00</span>)
             </button>
@@ -1553,7 +1617,7 @@ window.renderCart = () => {
   const temFiado = saleCart.some(i=>i.payment==='Fiado/Prazo');
   if (fwarn) fwarn.classList.toggle('hidden',!temFiado);
   if (!saleCart.length) {
-    tbody.innerHTML='<tr><td colspan="7" class="p-4 text-center text-gray-400 text-sm">Nenhum item</td></tr>';
+    tbody.innerHTML='<div class="p-4 text-center text-gray-400 text-sm">Nenhum item</div>';
     document.getElementById('cartTotalDisplay').textContent='Total: R$ 0,00';
     if (fbtn) fbtn.disabled=true; if (fcount) fcount.textContent='0'; if (ftotal) ftotal.textContent='R$ 0,00';
   } else {
@@ -1562,15 +1626,12 @@ window.renderCart = () => {
       const tot = item.qty*(item.value||0);
       grand+=tot;
       const isFiado=item.payment==='Fiado/Prazo';
-      return `<tr class="border-b hover:bg-gray-50 text-xs ${isFiado?'bg-yellow-50':''}">
-        <td class="p-2 font-medium">${item.desc}${isFiado?'<span class="ml-1 text-yellow-600">🤝</span>':''}</td>
-        <td class="p-2 text-center">${item.qty}</td>
-        <td class="p-2 text-gray-500">${item.category}</td>
-        <td class="p-2 ${isFiado?'text-yellow-600 font-bold':'text-gray-500'}">${item.payment}</td>
-        <td class="p-2 text-right">${window.formatMoney(item.value)}</td>
-        <td class="p-2 text-right font-bold text-agro-green">${window.formatMoney(tot)}</td>
-        <td class="p-2 text-center"><button onclick="removeFromCart(${i})" class="text-red-400 hover:text-red-600"><i class="fas fa-times"></i></button></td>
-      </tr>`;
+      return `<div class="cart-item ${isFiado?'cart-fiado':''}">
+        <div class="ci-main"><div class="ci-desc">${item.desc}${isFiado?' 🤝':''}</div>
+          <div class="ci-meta">${item.qty} × ${window.formatMoney(item.value)} · ${item.payment} · ${item.category}</div></div>
+        <div class="ci-total">${window.formatMoney(tot)}</div>
+        <button class="ci-del" onclick="removeFromCart(${i})" aria-label="Remover"><i class="fas fa-times"></i></button>
+      </div>`;
     }).join('');
     document.getElementById('cartTotalDisplay').textContent=`Total: ${window.formatMoney(grand)}`;
     if (fbtn) fbtn.disabled=false;
@@ -3071,102 +3132,20 @@ window.addEventListener('load', async ()=>{
 
 <script>
 (function setupPWA(){
-  const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-    <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#00a840"/><stop offset="100%" stop-color="#007a2d"/>
-    </linearGradient></defs>
-    <rect width="512" height="512" rx="112" fill="url(#g)"/>
-    <text x="256" y="330" font-family="Arial,Helvetica,sans-serif" font-size="240" font-weight="900" fill="#ffffff" text-anchor="middle">A+</text>
-    <ellipse cx="382" cy="140" rx="52" ry="32" fill="#FFB800" transform="rotate(-30 382 140)"/>
-  </svg>`;
-  const iconDataUrl = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgIcon)));
-
   const bannerIcon = document.getElementById('pwa-banner-icon');
-  if (bannerIcon) bannerIcon.src = iconDataUrl;
-
-  const manifest = {
-    name: 'AgroVida+ | Gestão',
-    short_name: 'AgroVida+',
-    description: 'Gestão de vendas, fiado, catálogo e ferramentas de gestão para o produtor rural.',
-    start_url: location.pathname,
-    scope: './',
-    display: 'standalone',
-    orientation: 'portrait-primary',
-    background_color: '#f3f4f6',
-    theme_color: '#009036',
-    lang: 'pt-BR',
-    categories: ['business','productivity','finance'],
-    icons: [
-      { src: iconDataUrl, sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
-      { src: iconDataUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'any' },
-      { src: iconDataUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'maskable' }
-    ]
-  };
-
-  try {
-    const manifestBlob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
-    const manifestURL = URL.createObjectURL(manifestBlob);
-    const link = document.getElementById('pwaManifestLink') || document.createElement('link');
-    link.rel = 'manifest';
-    link.href = manifestURL;
-    if (!link.parentNode) document.head.appendChild(link);
-  } catch(e) { console.warn('Manifest blob falhou:', e); }
-
-  try {
-    const touch = document.createElement('link');
-    touch.rel = 'apple-touch-icon';
-    touch.href = iconDataUrl;
-    document.head.appendChild(touch);
-    const fav = document.createElement('link');
-    fav.rel = 'icon';
-    fav.type = 'image/svg+xml';
-    fav.href = iconDataUrl;
-    document.head.appendChild(fav);
-  } catch(e) {}
-
-  const swCode = `
-    const CACHE = 'agrovida-pwa-v6.6.0';
-    const ASSETS = ['./', './index.html'];
-    self.addEventListener('install', e => {
-      e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(()=>{})));
-      self.skipWaiting();
-    });
-    self.addEventListener('activate', e => {
-      e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))));
-      self.clients.claim();
-    });
-    self.addEventListener('fetch', e => {
-      if (e.request.method !== 'GET') return;
-      const url = new URL(e.request.url);
-      if (url.origin !== location.origin) return;
-      e.respondWith(
-        caches.match(e.request).then(cached => {
-          const net = fetch(e.request).then(res => {
-            if (res && res.status === 200) caches.open(CACHE).then(c => c.put(e.request, res.clone()));
-            return res;
-          }).catch(() => cached);
-          return cached || net;
-        })
-      );
-    });
-  `;
-
-  window.__swCode = swCode;
-
+  if (bannerIcon) bannerIcon.src = 'icons/icon-192.png';
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js', {scope:'./'})
-      .then(r => console.log('✅ SW via ./sw.js', r.scope))
-      .catch(() => {
-        try {
-          const swBlob = new Blob([swCode], {type:'application/javascript'});
-          const swURL = URL.createObjectURL(swBlob);
-          navigator.serviceWorker.register(swURL).then(r => {
-            console.log('✅ SW via Blob URL', r.scope);
-          }).catch(() => {
-            console.info('ℹ️ SW não suportado nesse contexto.');
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').then(reg => {
+        reg.addEventListener('updatefound', () => {
+          const nw = reg.installing;
+          if (nw) nw.addEventListener('statechange', () => {
+            if (nw.state === 'installed' && navigator.serviceWorker.controller && typeof showNotification === 'function')
+              showNotification('Nova versão pronta — feche e abra o app para atualizar','info');
           });
-        } catch(e) {}
-      });
+        });
+      }).catch(e => console.warn('SW:', e));
+    });
   }
 
   let deferredPrompt = null;
@@ -3255,15 +3234,38 @@ window.addEventListener('load', async ()=>{
     if (hint) hint.classList.add('hidden');
   };
 
-  window.pwaShowSW = () => {
-    console.log('%c═══════ COPIE O CÓDIGO ABAIXO E SALVE COMO sw.js ═══════','color:#009036;font-weight:bold;font-size:14px');
-    console.log(swCode);
-    console.log('%c═══════════════════════════════════════════════════════','color:#009036;font-weight:bold;font-size:14px');
-  };
-
   console.log('%c🌱 AgroVida+ PWA v6.6 Mobile','color:#009036;font-weight:bold;font-size:16px');
-  console.log('Dica: chame pwaShowSW() no console para ver/baixar o código do Service Worker.');
 })();
+</script>
+<script>
+(function(){
+  // Qtd: botões − / +
+  window.stepQty = function(d){
+    const el = document.getElementById('itemQty'); if(!el) return;
+    const v = Math.round(((parseFloat(el.value)||0) + d) * 100) / 100;
+    if (v > 0) { el.value = v; el.dispatchEvent(new Event('input',{bubbles:true})); }
+  };
+  // Seleciona o conteúdo ao tocar em Qtd/Valor (digitar direto sem apagar)
+  ['itemQty','value'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.addEventListener('focus',()=>setTimeout(()=>el.select&&el.select(),30));
+  });
+  // Tabelas → cartões: copia o título da coluna para cada célula
+  function labelTables(){
+    document.querySelectorAll('.table-responsive table').forEach(t=>{
+      const hs=[...t.querySelectorAll('thead th')].map(h=>h.textContent.trim().replace(/^✕$/,''));
+      t.querySelectorAll('tbody tr').forEach(tr=>[...tr.children].forEach((td,i)=>{
+        if(td.tagName!=='TD'||td.hasAttribute('colspan')) return;
+        const l=hs[i]||''; td.dataset.label=l; td.classList.toggle('tc-act',!l);
+      }));
+    });
+  }
+  let q=0;
+  new MutationObserver(()=>{ if(!q) q=requestAnimationFrame(()=>{q=0;labelTables();}); })
+    .observe(document.body,{childList:true,subtree:true});
+  labelTables();
+})();
+
 </script>
 </body>
 </html>
