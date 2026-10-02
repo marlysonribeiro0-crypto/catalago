@@ -13,8 +13,8 @@
 <meta name="apple-mobile-web-app-title" content="AgroVida+">
 <meta name="application-name" content="AgroVida+">
 <link rel="manifest" href="/catalogo/manifest.json">
-<link rel="icon" type="image/png" sizes="192x192" href="/catalogo/icons/icon-192.png">
-<link rel="apple-touch-icon" href="/catalogo/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/catalogo/icon-512.png">
+<link rel="apple-touch-icon" href="/catalogo/icon-512.png">
 
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -254,7 +254,6 @@ body {
   .notification { left: 10px; right: 10px; top: 68px; }
   .chart-container { height: 230px; }
 
-  /* Botão de resumo aparece */
   .dash-toggle-btn {
     display: flex;
     align-items: center;
@@ -286,11 +285,9 @@ body {
   }
   .dash-toggle-btn.expanded .dash-caret { transform: rotate(180deg); }
 
-  /* Resumo recolhido por padrão no mobile */
   #dashSummary.collapsed { display: none; }
   #dashSummary { animation: fadeIn 0.2s ease; }
 
-  /* Botões maiores dentro do formulário de venda */
   #addTransactionBtn {
     min-height: 56px !important;
     font-size: 16px !important;
@@ -299,13 +296,10 @@ body {
   }
   #finalizeSaleBtn { min-height: 54px !important; font-size: 15px !important; }
 
-  /* Input Qtd mais compacto */
   #itemQty { text-align: center; font-weight: 700; font-size: 17px !important; }
 
-  /* Tipo de transação (Venda/Saída) mais compacto */
   .type-filter-btn { flex: 1; min-height: 48px; font-size: 14px; font-weight: 700; }
 
-  /* Padding do card de transação mais enxuto para dar espaço */
   #transactionCard .p-4 { padding: 14px !important; }
 }
 @media (min-width: 769px) {
@@ -356,13 +350,10 @@ body {
   .sticky-cart-mobile{bottom:calc(72px + env(safe-area-inset-bottom))}
   .notification{top:calc(62px + env(safe-area-inset-top))}
   #pwa-install-banner{left:12px!important;right:12px!important;bottom:calc(80px + env(safe-area-inset-bottom))!important;max-width:none!important}
-  /* modais viram "gaveta" */
   .modal-overlay{align-items:flex-end}
   .modal-content{width:100%;max-width:100%;border-radius:20px 20px 0 0;max-height:92dvh;padding-bottom:calc(18px + env(safe-area-inset-bottom))}
-  /* abas roláveis */
   div:has(>.fiado-tab-btn),div:has(>.profit-tab-btn),.profit-report-tabs{overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
   .fiado-tab-btn,.profit-tab-btn{white-space:nowrap}
-  /* tabelas viram cartões */
   .table-responsive{overflow-x:visible}
   .table-responsive table{min-width:0!important;display:block}
   .table-responsive thead{display:none}
@@ -374,7 +365,6 @@ body {
   .table-responsive td:first-child,.table-responsive td[colspan],.table-responsive td.tc-act{grid-column:1/-1}
   .table-responsive td.tc-act{display:flex;justify-content:flex-end;gap:14px}
   .table-responsive td.tc-act button{min-width:44px;min-height:40px}
-  /* Movimentação do dia: cartão compacto */
   #todayTableBody tr{grid-template-columns:auto 1fr auto;grid-template-areas:"tipo hora del" "desc desc desc" "cat pgto valor";align-items:center}
   #todayTableBody td::before{display:none!important}
   #todayTableBody td:nth-child(1):not([colspan]){grid-area:tipo}
@@ -428,7 +418,7 @@ body {
 
 <!-- PWA BANNER -->
 <div id="pwa-install-banner" class="hidden fixed z-50 card p-3 flex items-start gap-3" style="bottom: 20px; right: 20px; max-width: 380px;">
-  <img id="pwa-banner-icon" class="pwa-icon" alt="AgroVida+" src="/catalogo/icons/icon-192.png">
+  <img id="pwa-banner-icon" class="pwa-icon" alt="AgroVida+" src="/catalogo/icon-512.png">
   <div class="flex-1 min-w-0">
     <p class="font-bold text-gray-800 text-sm">📱 Instalar AgroVida+</p>
     <p class="text-xs text-gray-500 mt-0.5 leading-snug">Adicione à tela inicial e acesse como um app de verdade — tela cheia, ícone próprio, sem barra de navegador.</p>
@@ -472,7 +462,6 @@ body {
   <!-- ══════════════════════════════════ DASHBOARD / BALCÃO ══════════════════════════════════ -->
   <div id="tab-dashboard" class="fade-in">
 
-    <!-- BOTÃO DE RESUMO (só aparece no mobile) -->
     <button type="button" id="dashToggleBtn" class="dash-toggle-btn mb-2" onclick="toggleDashSummary()">
       <span class="flex items-center gap-3">
         <span class="dash-icon"><i class="fas fa-chart-pie text-sm"></i></span>
@@ -484,7 +473,6 @@ body {
       <i class="fas fa-chevron-down dash-caret"></i>
     </button>
 
-    <!-- ══ BLOCO RECOLHÍVEL (resumo) ══ -->
     <div id="dashSummary">
       <div class="card mb-2 overflow-hidden">
         <div class="px-4 py-2 flex flex-wrap items-center justify-between gap-2 border-b">
@@ -557,9 +545,7 @@ body {
         <button onclick="editMeta()" class="text-gray-400 hover:text-blue-500 text-xs" title="Editar meta"><i class="fas fa-edit"></i></button>
       </div>
     </div>
-    <!-- ══ FIM BLOCO RECOLHÍVEL ══ -->
 
-    <!-- ═══ CARD DE TRANSAÇÃO (destaque) ═══ -->
     <div class="card mb-3" id="transactionCard">
       <div class="px-4 py-3 border-b flex flex-wrap items-center justify-between gap-2">
         <h2 class="font-bold text-gray-700"><i class="fas fa-exchange-alt text-agro-green mr-2"></i> Nova Transação</h2>
@@ -570,7 +556,6 @@ body {
       </div>
       <div class="p-4">
 
-        <!-- ⚡ CHIPS DE TOQUE RÁPIDO (só mobile) -->
         <div id="quickProductsWrap" class="md:hidden mb-3 hidden">
           <div class="flex items-center justify-between mb-1.5">
             <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wide"><i class="fas fa-bolt text-yellow-500 mr-1"></i> Toque rápido</span>
@@ -3151,7 +3136,7 @@ window.addEventListener('load', async ()=>{
 <script>
 (function setupPWA(){
   const bannerIcon = document.getElementById('pwa-banner-icon');
-  if (bannerIcon) bannerIcon.src = '/catalogo/icons/icon-192.png';
+  if (bannerIcon) bannerIcon.src = '/catalogo/icon-512.png';
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/catalogo/sw.js').then(reg => {
