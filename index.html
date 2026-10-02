@@ -173,11 +173,7 @@ body {
 .pwa-ios-hint { background:#f0fdf4; border:1px solid #86efac; border-radius:10px; padding:10px 12px; font-size:13px; color:#166534; margin-top:8px; }
 
 /* ══════════ MELHORIAS MOBILE — BALCÃO ══════════ */
-
-/* Botão de resumo do dashboard (só mobile) */
 .dash-toggle-btn { display: none; }
-
-/* Chips de produto (toque rápido) */
 .quick-chips-scroll {
   overflow-x: auto; -webkit-overflow-scrolling: touch;
   padding-bottom: 6px;
@@ -209,7 +205,6 @@ body {
 .quick-chip.fav { background: linear-gradient(135deg,#fef3c7,#fde68a); border-color: #fbbf24; color: #78350f; }
 .quick-chip.fav .qc-price { color: #92400e; }
 
-/* Barra flutuante do carrinho (mobile) */
 .sticky-cart-mobile {
   display: none;
   position: fixed;
@@ -238,81 +233,189 @@ body {
 }
 .sticky-cart-mobile .sc-btn:active { transform: scale(0.95); }
 
-/* Ajustes finos para mobile */
+/* ══════════ v6.7 — REFINAMENTO MOBILE ══════════ */
+
+/* Qtd compacta com botões − / + */
+.qty-compact {
+  display: flex;
+  align-items: stretch;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  min-height: 46px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.qty-compact:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0,144,54,0.1);
+}
+.qty-compact button {
+  width: 34px;
+  flex-shrink: 0;
+  border: none;
+  background: #f9fafb;
+  color: var(--primary);
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+  touch-action: manipulation;
+}
+.qty-compact button:active { background: #dcfce7; }
+.qty-compact input {
+  flex: 1; min-width: 0;
+  border: none; outline: none;
+  text-align: center;
+  font-weight: 800;
+  font-size: 15px;
+  background: transparent;
+  padding: 0 2px;
+}
+.qty-compact input::-webkit-outer-spin-button,
+.qty-compact input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.qty-compact input[type=number] { -moz-appearance: textfield; }
+
+/* Ajustes finos mobile */
 @media (max-width: 768px) {
   .mobile-menu-btn { display: flex; }
   .mobile-bottom-nav { display: flex; }
-  .sidebar { position: fixed; width: 280px; z-index: 1000; transform: translateX(-100%); left: 0; top: 0; }
-  main { padding-bottom: 76px !important; padding-top: 66px !important; }
+  .sidebar { position: fixed; width: 280px; z-index: 1001; transform: translateX(-100%); left: 0; top: 0; }
+  main { padding-bottom: calc(86px + env(safe-area-inset-bottom)) !important; padding-top: 64px !important; }
   .card { margin-bottom: 14px; }
   .grid { gap: 10px; }
   .input-field { font-size: 16px; min-height: 52px; padding: 14px 16px; }
   .btn-primary, .btn-expense, .btn-secondary { width: 100%; }
-  .modal-content { width: 96%; max-height: 87vh; padding: 18px; }
-  .notification { left: 10px; right: 10px; top: 68px; }
+  .modal-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    border-radius: 0 !important;
+    padding: 18px 16px calc(80px + env(safe-area-inset-bottom)) 16px !important;
+    animation: slideUpMobile .28s cubic-bezier(0.4,0,0.2,1) !important;
+  }
+  @keyframes slideUpMobile {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .notification { left: 10px; right: 10px; top: 66px; }
   .chart-container { height: 230px; }
 
-  /* Botão de resumo aparece */
-  .dash-toggle-btn {
+  /* Top bar do app */
+  .app-topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 14px 16px;
-    font-weight: 700;
-    color: #374151;
-    font-size: 14px;
+    gap: 12px;
+    padding: 0 12px 0 70px;
+    z-index: 99;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    color: white;
+  }
+  .app-topbar .app-title {
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: .02em;
+    line-height: 1.1;
+  }
+  .app-topbar .app-title small {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    opacity: .75;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .app-topbar .topbar-spacer { flex: 1; }
+  .app-topbar .topbar-btn {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: none;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
     cursor: pointer;
-    min-height: 52px;
-    width: 100%;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    transition: box-shadow .2s;
+    position: relative;
+    transition: background .15s;
   }
-  .dash-toggle-btn:active { box-shadow: 0 0 0 3px rgba(0,144,54,0.1); }
-  .dash-toggle-btn .dash-icon {
-    width: 32px; height: 32px; border-radius: 10px;
-    background: linear-gradient(135deg,#ecfdf5,#d1fae5);
-    color: #059669; display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .dash-toggle-btn .dash-caret {
-    color: #9ca3af; transition: transform .25s;
-    flex-shrink: 0;
-  }
-  .dash-toggle-btn.expanded .dash-caret { transform: rotate(180deg); }
+  .app-topbar .topbar-btn:active { background: rgba(255,255,255,0.28); }
 
-  /* Resumo recolhido por padrão no mobile */
-  #dashSummary.collapsed { display: none; }
-  #dashSummary { animation: fadeIn 0.2s ease; }
+  .sidebar { z-index: 1001 !important; }
+  .mobile-menu-btn { z-index: 1002 !important; top: 12px !important; }
+  .mobile-overlay { z-index: 1000 !important; }
 
-  /* Botões maiores dentro do formulário de venda */
-  #addTransactionBtn {
+  .mobile-bottom-nav {
+    padding: 6px 0 calc(6px + env(safe-area-inset-bottom)) 0 !important;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+  }
+  .mobile-bottom-nav button {
     min-height: 56px !important;
-    font-size: 16px !important;
-    border-radius: 12px !important;
-    font-weight: 800 !important;
+    font-size: 10px !important;
+    gap: 4px !important;
+    border-radius: 12px;
   }
-  #finalizeSaleBtn { min-height: 54px !important; font-size: 15px !important; }
+  .mobile-bottom-nav button i { font-size: 19px !important; }
+  .mobile-bottom-nav button.active {
+    background: linear-gradient(180deg, #ecfdf5 0%, transparent 100%);
+  }
 
-  /* Input Qtd mais compacto */
-  #itemQty { text-align: center; font-weight: 700; font-size: 17px !important; }
-
-  /* Tipo de transação (Venda/Saída) mais compacto */
-  .type-filter-btn { flex: 1; min-height: 48px; font-size: 14px; font-weight: 700; }
-
-  /* Padding do card de transação mais enxuto para dar espaço */
+  #transactionCard .px-4.py-3 { padding: 12px 14px !important; }
   #transactionCard .p-4 { padding: 14px !important; }
+  #desc { font-size: 16px !important; font-weight: 600; }
+  #addTransactionBtn {
+    min-height: 54px !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    letter-spacing: .01em;
+    box-shadow: 0 4px 14px rgba(0,144,54,0.25);
+  }
+  #addTransactionBtn:active { box-shadow: 0 2px 6px rgba(0,144,54,0.3); }
+  #itemTotalPreview {
+    font-size: 13px !important;
+    padding: 10px 14px !important;
+  }
+
+  .table-responsive {
+    background:
+      linear-gradient(to right, #fff 30%, rgba(255,255,255,0)),
+      linear-gradient(to right, rgba(255,255,255,0), #fff 70%) 100% 0,
+      radial-gradient(farthest-side at 0 50%, rgba(0,0,0,.08), transparent),
+      radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,.08), transparent) 100% 0;
+    background-repeat: no-repeat;
+    background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+    background-attachment: local, local, scroll, scroll;
+  }
+
+  .card { border-radius: 14px !important; }
+  .quick-chip { min-height: 48px !important; font-size: 14px !important; }
+  .summary-stat-card { padding: 12px 8px !important; }
+
+  .sticky-cart-mobile {
+    bottom: calc(78px + env(safe-area-inset-bottom)) !important;
+    border-radius: 18px !important;
+    padding: 14px 16px !important;
+  }
+  .sticky-cart-mobile .sc-btn { min-height: 48px !important; font-size: 15px !important; }
+
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+  input, select, textarea { font-size: 16px !important; }
 }
+
 @media (min-width: 769px) {
-  .mobile-menu-btn, .mobile-bottom-nav, .mobile-overlay, .sticky-cart-mobile, .dash-toggle-btn { display: none !important; }
+  .mobile-menu-btn, .mobile-bottom-nav, .mobile-overlay, .sticky-cart-mobile, .dash-toggle-btn, .app-topbar { display: none !important; }
   #dashSummary { display: block !important; }
   main { padding-top: 0 !important; }
 }
 @media print {
-  .sidebar, .mobile-menu-btn, .mobile-bottom-nav, .btn-primary, .btn-expense, .btn-secondary, #pwa-install-banner, .sticky-cart-mobile, .dash-toggle-btn { display: none !important; }
+  .sidebar, .mobile-menu-btn, .mobile-bottom-nav, .btn-primary, .btn-expense, .btn-secondary, #pwa-install-banner, .sticky-cart-mobile, .dash-toggle-btn, .app-topbar { display: none !important; }
   main { padding: 0 !important; }
   .card { box-shadow: none; border: 1px solid #ddd; }
 }
@@ -342,6 +445,19 @@ body {
   <i class="fas fa-bars text-lg"></i>
 </button>
 
+<!-- TOP BAR DO APP (só mobile) -->
+<header class="app-topbar" id="appTopbar" style="display:none">
+  <div>
+    <div class="app-title">AgroVida+<small>Sistema de Gestão</small></div>
+  </div>
+  <div class="topbar-spacer"></div>
+  <button class="topbar-btn" onclick="showTab('dashboard')" title="Balcão"><i class="fas fa-cash-register"></i></button>
+  <button class="topbar-btn" onclick="showTab('fiado')" title="Fiado" id="topbarFiadoBtn">
+    <i class="fas fa-handshake"></i>
+    <span class="badge-count hidden" id="topbarFiadoBadge">0</span>
+  </button>
+</header>
+
 <!-- SIDEBAR -->
 <aside class="sidebar text-white w-full md:w-64 flex-shrink-0 md:h-screen flex flex-col" id="sidebar">
   <div class="logo-container flex items-center justify-between">
@@ -356,7 +472,7 @@ body {
     <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span> Online
   </div>
   <nav class="mt-3 flex-1 overflow-y-auto" id="sidebarNav"></nav>
-  <div class="p-3 text-center text-xs text-white/50">v6.6.0 PWA Mobile ⚡ AgroVida+</div>
+  <div class="p-3 text-center text-xs text-white/50">v6.7.0 PWA Mobile ⚡ AgroVida+</div>
 </aside>
 
 <!-- MAIN -->
@@ -477,33 +593,50 @@ body {
           </div>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-12 gap-3 items-end">
-          <div class="col-span-1 md:col-span-1" id="qtdFieldWrapper">
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Qtd</label>
-            <input type="number" id="itemQty" class="input-field text-center" value="1" min="0.01" step="0.01" placeholder="1" inputmode="decimal">
-          </div>
-          <div class="col-span-1 md:col-span-4">
+        <!-- ═══ FORMULÁRIO v6.7 MOBILE-FIRST ═══ -->
+        <div class="grid grid-cols-6 md:grid-cols-12 gap-3 items-end">
+
+          <!-- PRODUTO: linha própria no mobile -->
+          <div class="col-span-6 md:col-span-4">
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1" id="transactionLabel">Produto</label>
             <div class="relative">
               <input type="text" id="desc" class="input-field" placeholder="Ex: Ração..." required autocomplete="off" enterkeyhint="next">
               <div id="descSuggestions" class="search-suggestions hidden"></div>
             </div>
           </div>
-          <div class="col-span-1 md:col-span-2">
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Categoria</label>
-            <select id="category" class="input-field"></select>
+
+          <!-- QTD COMPACTA -->
+          <div class="col-span-2 md:col-span-1" id="qtdFieldWrapper">
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1 text-center">Qtd</label>
+            <div class="qty-compact">
+              <button type="button" onclick="decQty()" aria-label="Diminuir">−</button>
+              <input type="number" id="itemQty" value="1" min="0.01" step="0.01" inputmode="decimal" enterkeyhint="next">
+              <button type="button" onclick="incQty()" aria-label="Aumentar">+</button>
+            </div>
           </div>
-          <div class="col-span-1 md:col-span-2">
+
+          <!-- VALOR -->
+          <div class="col-span-4 md:col-span-2">
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Valor Unit. (R$)</label>
             <input type="text" id="value" class="input-field text-right" placeholder="0,00" required inputmode="decimal" enterkeyhint="done">
           </div>
-          <div class="col-span-1 md:col-span-2" id="paymentWrapper">
+
+          <!-- CATEGORIA -->
+          <div class="col-span-3 md:col-span-2">
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Categoria</label>
+            <select id="category" class="input-field"></select>
+          </div>
+
+          <!-- PAGAMENTO -->
+          <div class="col-span-3 md:col-span-2" id="paymentWrapper">
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Pagamento</label>
             <select id="payment" class="input-field">
               <option>Dinheiro</option><option>Pix</option><option>Débito</option><option>Crédito</option><option>Fiado/Prazo</option>
             </select>
           </div>
-          <div class="col-span-2 md:col-span-1">
+
+          <!-- BOTÃO ADICIONAR -->
+          <div class="col-span-6 md:col-span-1">
             <button onclick="handleTransactionAction()" id="addTransactionBtn" class="btn-primary w-full"><i class="fas fa-cart-plus mr-1"></i> Adicionar</button>
           </div>
         </div>
@@ -991,7 +1124,7 @@ body {
       <div class="card p-5 md:col-span-2">
         <h3 class="font-bold text-lg text-gray-700 mb-4 flex items-center gap-2"><i class="fas fa-info-circle text-agro-green"></i> Informações do Sistema</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="text-center bg-gray-50 rounded-lg p-3"><p class="text-xs text-gray-500">Versão</p><p class="font-bold text-sm">v6.6.0 PWA</p></div>
+          <div class="text-center bg-gray-50 rounded-lg p-3"><p class="text-xs text-gray-500">Versão</p><p class="font-bold text-sm">v6.7.0 PWA</p></div>
           <div class="text-center bg-gray-50 rounded-lg p-3"><p class="text-xs text-gray-500">Total Vendas</p><p class="font-bold text-agro-green" id="totalSalesCount">0</p></div>
           <div class="text-center bg-gray-50 rounded-lg p-3"><p class="text-xs text-gray-500">Total Saídas</p><p class="font-bold text-expense-red" id="totalExpensesCount">0</p></div>
           <div class="text-center bg-gray-50 rounded-lg p-3"><p class="text-xs text-gray-500">Produtos</p><p class="font-bold" id="totalProductsCount">0</p></div>
@@ -1390,7 +1523,7 @@ window.showModal  = id => { document.getElementById(id).classList.add('active');
 window.closeModal = id => { document.getElementById(id).classList.remove('active'); document.body.style.overflow=''; };
 
 // ══════════════════════════════════════════════════
-// 🆕 MELHORIAS MOBILE — resumo colapsável, chips, sticky cart
+// MELHORIAS MOBILE — resumo colapsável, chips, sticky cart
 // ══════════════════════════════════════════════════
 
 window.toggleDashSummary = () => {
@@ -1419,7 +1552,6 @@ window.scrollToCart = () => {
 
 // ─── Chips de toque rápido ─────────────────────
 function computeQuickProducts() {
-  // Top produtos dos últimos 90 dias
   const since = new Date(); since.setDate(since.getDate()-90);
   const sinceISO = `${since.getFullYear()}-${String(since.getMonth()+1).padStart(2,'0')}-${String(since.getDate()).padStart(2,'0')}`;
   const stats = {};
@@ -1433,7 +1565,6 @@ function computeQuickProducts() {
   });
   const top = Object.values(stats).sort((a,b)=>b.count-a.count).slice(0,8);
 
-  // Complementa com produtos do catálogo (favoritos) se faltar
   if (top.length < 6) {
     const have = new Set(top.map(t=>t.name.toLowerCase()));
     products.slice(0, 8).forEach(p=>{
@@ -1483,19 +1614,6 @@ function updateStickyCart() {
 window.updateStickyCart = updateStickyCart;
 window.addEventListener('resize', updateStickyCart);
 
-// ─── Override setTransactionType para esconder chips quando for Saída
-const _origSetTransactionType = window.setTransactionType;
-window.setTransactionType = type => {
-  _origSetTransactionType(type);
-  const wrap = document.getElementById('quickProductsWrap');
-  if (wrap) wrap.classList.toggle('hidden', type!=='sale' || !computeQuickProducts().length);
-  const dash = document.getElementById('dashSummary');
-  // Ao mudar para Saída, se o resumo estiver expandido, recolhe no mobile
-  if (type === 'expense' && window.innerWidth <= 768 && dash && !dash.classList.contains('collapsed')) {
-    // não força; mantém como está
-  }
-};
-
 window.setTransactionType = type => {
   transactionType = type;
   const sBtn = document.getElementById('transactionTypeSale');
@@ -1525,6 +1643,25 @@ window.setTransactionType = type => {
     if (prevW) prevW.classList.add('hidden');
     if (quickWrap) quickWrap.classList.add('hidden');
   }
+};
+
+// ═══════════════════════════════════════════════════════
+// Controles compactos de Qtd (mobile) — v6.7
+// ═══════════════════════════════════════════════════════
+window.incQty = () => {
+  const inp = document.getElementById('itemQty');
+  if (!inp) return;
+  const cur = parseFloat(inp.value) || 0;
+  inp.value = String(Math.round((cur + 1) * 100) / 100);
+  updateItemPreview();
+};
+window.decQty = () => {
+  const inp = document.getElementById('itemQty');
+  if (!inp) return;
+  const cur = parseFloat(inp.value) || 1;
+  const next = cur - 1;
+  if (next >= 0.01) inp.value = String(Math.round(next * 100) / 100);
+  updateItemPreview();
 };
 
 window.handleTransactionAction = () => transactionType==='sale' ? addToCart() : addTransaction();
@@ -1577,7 +1714,6 @@ window.renderCart = () => {
     if (fcount) fcount.textContent=saleCart.length;
     if (ftotal) ftotal.textContent=window.formatMoney(grand);
   }
-  // ⚡ Atualiza a barra flutuante mobile
   updateStickyCart();
 };
 
@@ -1787,7 +1923,6 @@ function updateScreen() {
     updateDashboardFiadoKPIs();
     updateCashDashboard();
     if (!document.getElementById('tab-management').classList.contains('hidden')) Mgmt.render();
-    // Atualiza subtítulo do botão de resumo
     const sub = document.getElementById('dashToggleSub');
     if (sub) sub.textContent = `Hoje: ${window.formatMoney(tT)} · Saídas: ${window.formatMoney(tE)}`;
 
@@ -1837,6 +1972,12 @@ function updateDashboardFiadoKPIs() {
   s('dashFiadoAtrasados', atrasados);
   s('settingsFiadoClientes', fClientes.length);
   s('settingsFiadoReceber',  window.formatMoney(receber));
+  // Topbar badge
+  const badge = document.getElementById('topbarFiadoBadge');
+  if (badge) {
+    badge.textContent = atrasados;
+    badge.classList.toggle('hidden', atrasados === 0);
+  }
 }
 
 let dashPeriod='day', cashDashChart=null;
@@ -2432,7 +2573,7 @@ window.createFullBackup = () => {
   try {
     const data = {
       timestamp: new Date().toISOString(),
-      version: '6.6.0-PWA-Mobile',
+      version: '6.7.0-PWA-Mobile',
       sales:    localSales,
       expenses: localExpenses,
       products: products,
@@ -3026,6 +3167,17 @@ window.Mgmt={
   delSwot(k,j){ const s=mgLoad('swot',{F:[],W:[],O:[],T:[]}); (s[k]||[]).splice(j,1); mgSave('swot',s); this.render(); }
 };
 
+// ═══════════════════════════════════════════════════════
+// Topbar mobile — v6.7
+// ═══════════════════════════════════════════════════════
+(function setupTopbar() {
+  const tb = document.getElementById('appTopbar');
+  if (!tb) return;
+  const show = () => { tb.style.display = window.innerWidth <= 768 ? 'flex' : 'none'; };
+  show();
+  window.addEventListener('resize', show);
+})();
+
 window.addEventListener('load', async ()=>{
   buildSidebarNav();
   buildBottomNav();
@@ -3054,7 +3206,6 @@ window.addEventListener('load', async ()=>{
     if(e.key==='Escape') document.querySelectorAll('.modal-overlay.active').forEach(m=>closeModal(m.id));
   });
 
-  // Estado inicial do resumo no mobile
   const sum = document.getElementById('dashSummary');
   if (window.innerWidth <= 768 && sum) sum.classList.add('collapsed');
   const dtb = document.getElementById('dashToggleBtn');
@@ -3070,8 +3221,11 @@ window.addEventListener('load', async ()=>{
 </script>
 
 <script>
-(function setupPWA(){
-  const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+(async function setupPWA() {
+  // ═══════════════════════════════════════════════════════
+  // 🎨 GERAÇÃO DOS ÍCONES A PARTIR DA SUA logo.png
+  // ═══════════════════════════════════════════════════════
+  const FALLBACK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
     <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#00a840"/><stop offset="100%" stop-color="#007a2d"/>
     </linearGradient></defs>
@@ -3079,11 +3233,59 @@ window.addEventListener('load', async ()=>{
     <text x="256" y="330" font-family="Arial,Helvetica,sans-serif" font-size="240" font-weight="900" fill="#ffffff" text-anchor="middle">A+</text>
     <ellipse cx="382" cy="140" rx="52" ry="32" fill="#FFB800" transform="rotate(-30 382 140)"/>
   </svg>`;
-  const iconDataUrl = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgIcon)));
+
+  async function generateLogoIcons() {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const size = Math.min(img.width, img.height);
+          const canvas = document.createElement('canvas');
+          canvas.width = 512; canvas.height = 512;
+          const ctx = canvas.getContext('2d');
+
+          // ── Ícone normal ──
+          ctx.clearRect(0, 0, 512, 512);
+          ctx.drawImage(img, 0, 0, size, size, 0, 0, 512, 512);
+          const regular = canvas.toDataURL('image/png');
+
+          // ── Ícone maskable (Android recorta em círculo/squircle) ──
+          ctx.fillStyle = '#009036';
+          ctx.fillRect(0, 0, 512, 512);
+          const pad = Math.floor(512 * 0.12);
+          const inner = 512 - pad * 2;
+          ctx.drawImage(img, 0, 0, size, size, pad, pad, inner, inner);
+          const maskable = canvas.toDataURL('image/png');
+
+          resolve({ regular, maskable });
+        } catch (e) {
+          console.warn('Erro ao recortar logo.png:', e);
+          resolve(null);
+        }
+      };
+      img.onerror = () => {
+        console.warn('logo.png não carregou — usando fallback SVG');
+        resolve(null);
+      };
+      img.src = './logo.png';
+    });
+  }
+
+  const icons = await generateLogoIcons();
+  let iconRegular, iconMaskable;
+  if (icons) {
+    iconRegular  = icons.regular;
+    iconMaskable = icons.maskable;
+  } else {
+    iconRegular = iconMaskable = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(FALLBACK_SVG)));
+  }
 
   const bannerIcon = document.getElementById('pwa-banner-icon');
-  if (bannerIcon) bannerIcon.src = iconDataUrl;
+  if (bannerIcon) bannerIcon.src = iconRegular;
 
+  // ═══════════════════════════════════════════════════════
+  // 📦 MANIFEST PWA
+  // ═══════════════════════════════════════════════════════
   const manifest = {
     name: 'AgroVida+ | Gestão',
     short_name: 'AgroVida+',
@@ -3097,9 +3299,9 @@ window.addEventListener('load', async ()=>{
     lang: 'pt-BR',
     categories: ['business','productivity','finance'],
     icons: [
-      { src: iconDataUrl, sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
-      { src: iconDataUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'any' },
-      { src: iconDataUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'maskable' }
+      { src: iconRegular,  sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: iconRegular,  sizes: '512x512', type: 'image/png', purpose: 'any' },
+      { src: iconMaskable, sizes: '512x512', type: 'image/png', purpose: 'maskable' }
     ]
   };
 
@@ -3112,21 +3314,27 @@ window.addEventListener('load', async ()=>{
     if (!link.parentNode) document.head.appendChild(link);
   } catch(e) { console.warn('Manifest blob falhou:', e); }
 
+  // Favicon + Apple Touch Icon com a logo recortada
   try {
-    const touch = document.createElement('link');
-    touch.rel = 'apple-touch-icon';
-    touch.href = iconDataUrl;
-    document.head.appendChild(touch);
+    const apple = document.createElement('link');
+    apple.rel = 'apple-touch-icon';
+    apple.sizes = '180x180';
+    apple.href = iconRegular;
+    document.head.appendChild(apple);
+
     const fav = document.createElement('link');
     fav.rel = 'icon';
-    fav.type = 'image/svg+xml';
-    fav.href = iconDataUrl;
+    fav.type = 'image/png';
+    fav.href = iconRegular;
     document.head.appendChild(fav);
   } catch(e) {}
 
+  // ═══════════════════════════════════════════════════════
+  // 🔧 SERVICE WORKER
+  // ═══════════════════════════════════════════════════════
   const swCode = `
-    const CACHE = 'agrovida-pwa-v6.6.0';
-    const ASSETS = ['./', './index.html'];
+    const CACHE = 'agrovida-pwa-v6.7.0';
+    const ASSETS = ['./', './index.html', './logo.png'];
     self.addEventListener('install', e => {
       e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(()=>{})));
       self.skipWaiting();
@@ -3150,7 +3358,6 @@ window.addEventListener('load', async ()=>{
       );
     });
   `;
-
   window.__swCode = swCode;
 
   if ('serviceWorker' in navigator) {
@@ -3160,35 +3367,26 @@ window.addEventListener('load', async ()=>{
         try {
           const swBlob = new Blob([swCode], {type:'application/javascript'});
           const swURL = URL.createObjectURL(swBlob);
-          navigator.serviceWorker.register(swURL).then(r => {
-            console.log('✅ SW via Blob URL', r.scope);
-          }).catch(() => {
-            console.info('ℹ️ SW não suportado nesse contexto.');
-          });
+          navigator.serviceWorker.register(swURL).then(r => console.log('✅ SW via Blob', r.scope)).catch(()=>{});
         } catch(e) {}
       });
   }
 
+  // ═══════════════════════════════════════════════════════
+  // 📲 INSTALAÇÃO
+  // ═══════════════════════════════════════════════════════
   let deferredPrompt = null;
   const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
   const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) && !window.MSStream;
 
-  function showBanner() {
-    if (isStandalone()) return;
-    const b = document.getElementById('pwa-install-banner');
-    if (b) b.classList.remove('hidden');
-  }
-  function hideBanner() {
-    const b = document.getElementById('pwa-install-banner');
-    if (b) b.classList.add('hidden');
-  }
+  const showBanner = () => { if (isStandalone()) return; document.getElementById('pwa-install-banner')?.classList.remove('hidden'); };
+  const hideBanner = () => document.getElementById('pwa-install-banner')?.classList.add('hidden');
 
   window.addEventListener('beforeinstallprompt', e => {
     e.preventDefault();
     deferredPrompt = e;
     showBanner();
   });
-
   window.addEventListener('appinstalled', () => {
     deferredPrompt = null;
     hideBanner();
@@ -3203,15 +3401,12 @@ window.addEventListener('load', async ()=>{
       if (outcome === 'accepted') hideBanner();
       return;
     }
-    if (isStandalone()) {
-      alert('✅ O AgroVida+ já está instalado! Você pode abri-lo pela tela inicial.');
-      return;
-    }
+    if (isStandalone()) { alert('✅ O AgroVida+ já está instalado!'); return; }
     if (isIOS) {
-      alert('📱 Para instalar no iPhone/iPad:\\n\\n1. Toque no ícone Compartilhar (□↑) do Safari.\\n2. Role a lista e toque em "Adicionar à Tela de Início".\\n3. Toque em "Adicionar" no canto superior direito.');
+      alert('📱 Para instalar no iPhone/iPad:\n\n1. Toque em Compartilhar (□↑) no Safari\n2. "Adicionar à Tela de Início"\n3. Toque em "Adicionar"');
       return;
     }
-    alert('📲 Para instalar o AgroVida+:\\n\\n• Chrome (Android): toque no menu ⋮ → "Instalar aplicativo" ou "Adicionar à tela inicial".\\n• Chrome (Desktop): clique no ícone ⊕ na barra de endereço.\\n• Edge: menu ⋯ → "Aplicativos" → "Instalar este site como aplicativo".\\n\\n⚠️ Se não aparecer, o site precisa estar em HTTPS.');
+    alert('📲 Para instalar:\n\n• Chrome Android: menu ⋮ → "Instalar aplicativo"\n• Chrome Desktop: ícone ⊕ na barra de endereço\n• Edge: ⋯ → Aplicativos → Instalar este site');
   };
 
   window.pwaDismissBanner = () => {
@@ -3222,9 +3417,8 @@ window.addEventListener('load', async ()=>{
   window.addEventListener('load', () => {
     setTimeout(() => {
       if (isStandalone()) return;
-      const dismissedAt = parseInt(localStorage.getItem('pwaBannerDismissed')||'0');
-      const days = (Date.now() - dismissedAt) / 86400000;
-      if (isIOS && days > 7) showBanner();
+      const d = parseInt(localStorage.getItem('pwaBannerDismissed')||'0');
+      if (isIOS && (Date.now() - d) / 86400000 > 7) showBanner();
     }, 5000);
   });
 
@@ -3232,37 +3426,14 @@ window.addEventListener('load', async ()=>{
     const el = document.getElementById('pwa-status-text');
     const hint = document.getElementById('pwa-ios-hint');
     if (!el) return;
-    if (isStandalone()) {
-      el.innerHTML = '✅ <b>App instalado</b> — você está usando a versão instalada.';
-      el.className = 'text-sm text-green-700 font-semibold';
-      if (hint) hint.classList.add('hidden');
-      return;
-    }
-    if (deferredPrompt) {
-      el.innerHTML = '🚀 <b>Pronto para instalar!</b> Clique em "Instalar Aplicativo".';
-      el.className = 'text-sm text-green-700 font-semibold';
-      if (hint) hint.classList.add('hidden');
-      return;
-    }
-    if (isIOS) {
-      el.innerHTML = '📱 Disponível para iPhone/iPad — siga as instruções abaixo.';
-      el.className = 'text-sm text-amber-700 font-semibold';
-      if (hint) hint.classList.remove('hidden');
-      return;
-    }
-    el.innerHTML = 'ℹ️ Use o menu do navegador para instalar (Chrome: ⋮ → Instalar aplicativo).';
-    el.className = 'text-sm text-gray-500';
-    if (hint) hint.classList.add('hidden');
+    if (isStandalone()) { el.innerHTML='✅ <b>App instalado</b>'; el.className='text-sm text-green-700 font-semibold'; if(hint)hint.classList.add('hidden'); return; }
+    if (deferredPrompt) { el.innerHTML='🚀 <b>Pronto para instalar!</b>'; el.className='text-sm text-green-700 font-semibold'; if(hint)hint.classList.add('hidden'); return; }
+    if (isIOS) { el.innerHTML='📱 Siga as instruções abaixo'; el.className='text-sm text-amber-700 font-semibold'; if(hint)hint.classList.remove('hidden'); return; }
+    el.innerHTML='ℹ️ Chrome: ⋮ → Instalar aplicativo'; el.className='text-sm text-gray-500'; if(hint)hint.classList.add('hidden');
   };
 
-  window.pwaShowSW = () => {
-    console.log('%c═══════ COPIE O CÓDIGO ABAIXO E SALVE COMO sw.js ═══════','color:#009036;font-weight:bold;font-size:14px');
-    console.log(swCode);
-    console.log('%c═══════════════════════════════════════════════════════','color:#009036;font-weight:bold;font-size:14px');
-  };
-
-  console.log('%c🌱 AgroVida+ PWA v6.6 Mobile','color:#009036;font-weight:bold;font-size:16px');
-  console.log('Dica: chame pwaShowSW() no console para ver/baixar o código do Service Worker.');
+  window.pwaShowSW = () => { console.log('%c═══ sw.js ═══','color:#009036;font-weight:bold'); console.log(swCode); };
+  console.log('%c🌱 AgroVida+ PWA v6.7 Mobile','color:#009036;font-weight:bold;font-size:16px');
 })();
 </script>
 </body>
