@@ -1,5 +1,11 @@
-const VERSION = 'agrovida-v7.0.0';
-const SHELL = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png'];
+const VERSION = 'agrovida-v7.0.1';
+const SHELL = [
+  '/catalogo/',
+  '/catalogo/index.html',
+  '/catalogo/manifest.json',
+  '/catalogo/icons/icon-192.png',
+  '/catalogo/icons/icon-512.png'
+];
 const CDN = ['cdn.tailwindcss.com','cdnjs.cloudflare.com','cdn.jsdelivr.net','cdn.sheetjs.com','www.gstatic.com','fonts.googleapis.com','fonts.gstatic.com'];
 
 self.addEventListener('install', e => {
@@ -19,11 +25,11 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  if (req.mode === 'navigate') {            // HTML: rede primeiro (pega versão nova), cache se estiver offline
+  if (req.mode === 'navigate') {
     e.respondWith(
       Promise.race([fetch(req), new Promise((_, rej) => setTimeout(rej, 4000))])
-        .then(r => { const cp = r.clone(); caches.open(VERSION).then(c => c.put('./index.html', cp)); return r; })
-        .catch(() => caches.match('./index.html'))
+        .then(r => { const cp = r.clone(); caches.open(VERSION).then(c => c.put('/catalogo/index.html', cp)); return r; })
+        .catch(() => caches.match('/catalogo/index.html'))
     );
     return;
   }
