@@ -1,10 +1,9 @@
-const VERSION = 'agrovida-v7.0.1';
+const VERSION = 'agrovida-v7.0.3';
 const SHELL = [
   '/catalogo/',
   '/catalogo/index.html',
   '/catalogo/manifest.json',
-  '/catalogo/icons/icon-192.png',
-  '/catalogo/icons/icon-512.png'
+  '/catalogo/icon-512.png'
 ];
 const CDN = ['cdn.tailwindcss.com','cdnjs.cloudflare.com','cdn.jsdelivr.net','cdn.sheetjs.com','www.gstatic.com','fonts.googleapis.com','fonts.gstatic.com'];
 
