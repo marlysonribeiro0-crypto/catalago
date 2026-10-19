@@ -1,5 +1,5 @@
-const VERSION = 'agrovida-v7.0.0';
-const SHELL = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png'];
+const VERSION = 'agrovida-v8.0.0';
+const SHELL = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
 const CDN = ['cdn.tailwindcss.com','cdnjs.cloudflare.com','cdn.jsdelivr.net','cdn.sheetjs.com','www.gstatic.com','fonts.googleapis.com','fonts.gstatic.com'];
 
 self.addEventListener('install', e => {
