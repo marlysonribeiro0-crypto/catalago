@@ -595,6 +595,10 @@ body{overscroll-behavior-y:contain}
   .notification{left:12px;right:12px;max-width:none}
 }
 </style>
+<style id="sync">
+.app-bar #syncBtn{position:absolute;right:8px;top:calc(env(safe-area-inset-top) + 6px);width:44px;height:44px;border-radius:12px;background:transparent;color:#fff;font-size:24px;border:0;display:grid;place-items:center}
+#syncBtn.spin{animation:spin .8s linear infinite}
+</style>
 </head>
 <body class="flex flex-col md:flex-row">
 
@@ -613,7 +617,7 @@ body{overscroll-behavior-y:contain}
 </div>
 
 
-<div class="app-bar"><span>AgroVida+</span></div>
+<div class="app-bar"><span>AgroVida+</span><button type="button" id="syncBtn" aria-label="Atualizar dados" onclick="this.classList.add('spin');syncNow(true).finally(()=>this.classList.remove('spin'))">↻</button></div>
 <div id="mobileOverlay" class="mobile-overlay" onclick="toggleSidebar()"></div>
 <button id="mobileMenuBtn" class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Menu">
   <span aria-hidden="true" style="font-size:23px">☰</span>
@@ -1498,7 +1502,7 @@ const app = initializeApp({
   appId:"1:1058005459532:web:f84be213da78c145648ae9"
 });
 let db;
-try{db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})});}
+try{db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()}),experimentalAutoDetectLongPolling:true});}
 catch(e){console.warn('Cache local indisponível, usando padrão:',e);db=getFirestore(app);}
 
 // ── Contador de leituras (estimativa por aparelho, só neste navegador) ──
@@ -3184,7 +3188,7 @@ import { initializeApp as initApp2 } from "https://www.gstatic.com/firebasejs/10
 import { getFirestore as getFS2, initializeFirestore as initFS2, persistentLocalCache as pLC2, persistentMultipleTabManager as pMTM2, collection as col2, addDoc as addDoc2, updateDoc as updateDoc2, deleteDoc as deleteDoc2, doc as doc2, onSnapshot as _onSnap2, orderBy as orderBy2, query as query2, getDoc as getDoc2, setDoc as setDoc2 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const fApp=initApp2({apiKey:"AIzaSyAPQST9oBIqYOYNksPNaARpyW8K-nXiRtE",authDomain:"agrovida-system.firebaseapp.com",projectId:"agrovida-system",storageBucket:"agrovida-system.firebasestorage.app",messagingSenderId:"808503446468",appId:"1:808503446468:web:989d4e3fd8716c0fe3f291"},"fiado-app");
-let fdb;try{fdb=initFS2(fApp,{localCache:pLC2({tabManager:pMTM2()})});}catch(e){console.warn('Cache local do fiado indisponível:',e);fdb=getFS2(fApp);}
+let fdb;try{fdb=initFS2(fApp,{localCache:pLC2({tabManager:pMTM2()}),experimentalAutoDetectLongPolling:true});}catch(e){console.warn('Cache local do fiado indisponível:',e);fdb=getFS2(fApp);}
 const fColClients=col2(fdb,"clients");
 const onSnap2=(q,...a)=>onSnapshot(q,...a);
 const fColConfig =col2(fdb,"config");
@@ -3269,7 +3273,7 @@ function _gfpeRaw(dateFilterFn, parceiro=false) {   // parceiro=true → só rep
 }
 window.getFiadoPaymentEntries = getFiadoPaymentEntries;
 
-onSnap2(fColClients,{includeMetadataChanges:true},snap=>{
+let fiadoUnsub=null;window.restartFiadoListener=()=>{try{fiadoUnsub?.();}catch{}fiadoUnsub=onSnap2(fColClients,{includeMetadataChanges:true},snap=>{
   fiadoReady=!snap.metadata?.fromCache;fiadoError=null;renderSparkStatus();
   fClientes=snap.docs.map(d=>({id:d.id,...d.data()}));
   Fiado.refreshUI();
@@ -3280,7 +3284,7 @@ onSnap2(fColClients,{includeMetadataChanges:true},snap=>{
   if (!document.getElementById('tab-history').classList.contains('hidden'))   filterHistory();
   if (!document.getElementById('tab-reports').classList.contains('hidden') && document.getElementById('customFilterStart').value && document.getElementById('customFilterEnd').value) applyCustomFilter();
   if (!document.getElementById('tab-profit').classList.contains('hidden'))    renderProfitReport();
-},e=>{fiadoError=e.code||e.message;renderSparkStatus();});
+},e=>{fiadoError=e.code||e.message;renderSparkStatus();});};window.restartFiadoListener();
 
 function setLoading(v){document.getElementById('loadingIndicator')?.classList.toggle('hidden',!v);}
 
@@ -3724,6 +3728,7 @@ ledgerUnsubs.push(onSnapshot(monthQuery(salesCol,month),{includeMetadataChanges:
   if(!document.getElementById('tab-settings').classList.contains('hidden')) updateSettingsInfo();
   if(!document.getElementById('tab-reports').classList.contains('hidden'))  applyCustomFilter();
   if(!document.getElementById('tab-profit').classList.contains('hidden'))   renderProfitReport();
+  if(!document.getElementById('tab-history').classList.contains('hidden'))filterHistory();
 },e=>{ledgerErrors.sale=e.code||e.message;renderSparkStatus();}));
 
 ledgerUnsubs.push(onSnapshot(monthQuery(expensesCol,month),{includeMetadataChanges:true},snap=>{
@@ -3732,10 +3737,21 @@ ledgerUnsubs.push(onSnapshot(monthQuery(expensesCol,month),{includeMetadataChang
   if(quickReady){refreshQuickRecent();if(!document.getElementById('tab-cashreview').classList.contains('hidden'))renderCashReview();}
   if(!document.getElementById('tab-settings').classList.contains('hidden')) updateSettingsInfo();
   if(!document.getElementById('tab-reports').classList.contains('hidden'))  applyCustomFilter();
+  if(!document.getElementById('tab-history').classList.contains('hidden'))filterHistory();
+  if(!document.getElementById('tab-expenses').classList.contains('hidden')){filterExpenses();updateExpenseSummary();}
 },e=>{ledgerErrors.expense=e.code||e.message;renderSparkStatus();}));
 
 }
 startLedgerListeners();
+let hiddenAt=0;
+window.syncNow=async manual=>{
+  try{startLedgerListeners();window.restartFiadoListener?.();}catch(e){console.warn(e);}
+  try{await loadProducts(true);try{updateProductsDisplay();}catch{}try{refreshQuickRecent();}catch{}}catch{}
+  if(manual)showNotification('Dados atualizados','success');
+};
+document.addEventListener('visibilitychange',()=>{if(document.hidden){hiddenAt=Date.now();return;}if(hiddenAt&&Date.now()-hiddenAt>45000)window.syncNow(false);});
+window.addEventListener('online',()=>window.syncNow(false));
+window.addEventListener('pageshow',e=>{if(e.persisted)window.syncNow(false);});
 // ─── INICIALIZAÇÃO ────────────────────────
 // ════════════════════════════════════════════════
 // FERRAMENTAS DE GESTÃO — Pareto · ABC · Ishikawa · 5W2H · SWOT
