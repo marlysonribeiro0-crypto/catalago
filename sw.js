@@ -1,4 +1,4 @@
-const VERSION = 'agrovida-v8.0.0';
+const VERSION = 'agrovida-v9.0.0';
 const SHELL = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
 const CDN = ['cdn.tailwindcss.com','cdnjs.cloudflare.com','cdn.jsdelivr.net','cdn.sheetjs.com','www.gstatic.com','fonts.googleapis.com','fonts.gstatic.com'];
 
@@ -19,12 +19,14 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  if (req.mode === 'navigate') {            // HTML: rede primeiro (pega versão nova), cache se estiver offline
-    e.respondWith(
-      Promise.race([fetch(req), new Promise((_, rej) => setTimeout(rej, 4000))])
-        .then(r => { const cp = r.clone(); caches.open(VERSION).then(c => c.put('./index.html', cp)); return r; })
-        .catch(() => caches.match('./index.html'))
-    );
+  if (req.mode === 'navigate') {
+    // Abre NA HORA com a cópia guardada e busca a versão nova em segundo plano (vale na próxima abertura).
+    e.respondWith(caches.open(VERSION).then(async c => {
+      const hit = await c.match('./index.html');
+      const net = fetch(req).then(r => { if (r && r.ok) c.put('./index.html', r.clone()); return r; }).catch(() => hit);
+      e.waitUntil(net.catch(() => {}));
+      return hit || net;
+    }));
     return;
   }
   if (url.origin === location.origin || CDN.includes(url.hostname)) e.respondWith(swr(req));
