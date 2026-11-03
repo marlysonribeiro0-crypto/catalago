@@ -574,6 +574,27 @@ body{overscroll-behavior-y:contain}
 
 .mobile-menu-btn{z-index:1000}
 </style>
+<style id="mob">
+@media(max-width:768px){
+  #pulseWidget{display:none!important}
+  html{-webkit-tap-highlight-color:transparent}
+  button,a,input,select,textarea,label,summary{touch-action:manipulation}
+  input,select,textarea,.input-field{font-size:16px!important}
+  .input-field,select.input-field{min-height:48px}
+  .btn-primary,.btn-secondary,.type-filter-btn,.cat-chip,.pro-button{min-height:44px}
+  #saleCatChips .cat-chip{padding:8px 12px;font-size:13px}
+  .ux-entry-grid .input-field{min-height:52px;font-size:17px!important}
+  main{padding-bottom:calc(150px + env(safe-area-inset-bottom))!important}
+  .ux-action-dock{bottom:calc(70px + env(safe-area-inset-bottom))!important;border-radius:16px}
+  .rc-box{max-height:88dvh;border-radius:20px 20px 0 0;align-self:flex-end}
+  .rc-ov{align-items:flex-end;padding:0}
+  .ex-menu{position:fixed;left:12px;right:12px;top:auto;bottom:calc(16px + env(safe-area-inset-bottom));padding:8px}
+  .ex-menu button{min-height:52px;font-size:16px}
+  .card{padding-left:14px;padding-right:14px}
+  .card table{font-size:13px}
+  .notification{left:12px;right:12px;max-width:none}
+}
+</style>
 </head>
 <body class="flex flex-col md:flex-row">
 
@@ -3351,8 +3372,8 @@ window.mostrarRecibo=(d,quando)=>{
     w.classList.remove('in');void w.offsetWidth;w.classList.add('in');
     const bar=el('pulseBar');bar.style.animation='none';void bar.offsetWidth;bar.style.animation='';
   }
-  function refresh(){try{const cur=list[i%(list.length||1)]?.t;list=slides();const k=list.findIndex(x=>x.t===cur);i=k>=0?k:0;paint();}catch(e){}}
-  function next(){if(document.hidden||list.length<2||el('pulseWidget')?.matches(':hover'))return;i=(i+1)%list.length;paint();}
+  function refresh(){if(matchMedia('(max-width:768px)').matches)return;try{const cur=list[i%(list.length||1)]?.t;list=slides();const k=list.findIndex(x=>x.t===cur);i=k>=0?k:0;paint();}catch(e){}}
+  function next(){if(matchMedia('(max-width:768px)').matches||document.hidden||list.length<2||el('pulseWidget')?.matches(':hover'))return;i=(i+1)%list.length;paint();}
   document.addEventListener('click',e=>{const d=e.target.closest?.('#pulseDots button');if(d){i=+d.dataset.i;paint();}});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh();});
   setTimeout(()=>{refresh();setInterval(refresh,45000);setInterval(next,7000);},2500);
